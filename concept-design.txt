@@ -1,0 +1,78 @@
+========== C
+int a,b,c=10;
+if(a == b) {
+    c = a;
+} else if(a == c) {
+    z = a;
+}
+else {
+    c = b;
+}
+
+========== Python
+if a == b:
+    c = a
+elsif a == c:
+    z = a
+else:
+    c = b;
+
+
+
+
+
+
+
+
+
+
+
+
+========== FLAT
+# START
+/-
+ -  Author: TechOnTheNet.com
+ -  Purpose: To show a comment that spans multiple lines.
+ -  Language:  C
+ -/
+
+dec a = 10
+hex h = 0x16
+*dec a = |1,2,3,4,5|
+*dec a = 10||0
+*dec a = 5|1,2,3,4,5|
+
+if  a >= b : 
+[
+    a = a + 1
+    b = b - 1
+    c = c * 1
+    d = d / 1
+    e = e % 1
+
+    c = a
+    a = b 
+
+    *s = z|1|
+    *a = x AND x
+    *a = y OR y
+    *a = NOT z 
+]
+or a == c :
+[
+    z = a
+]
+else : [
+    c = b
+]
+
+for i = 0, i < 10, i++ : [
+    *break
+]
+
+print c
+print "eiei" -> eiei
+println "eiei" -> eiei\n
+
+:) -> Have a good day
+:( -> Don't cry
