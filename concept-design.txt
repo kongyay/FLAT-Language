@@ -36,11 +36,11 @@ else:
  -  Language:  C
  -/
 
-dec a = 10
-hex h = 0x16
-*dec a = |1,2,3,4,5|
-*dec a = 10||0
-*dec a = 5|1,2,3,4,5|
+int a = 10
+int h = 0x16
+*int a = |1,2,3,4,5|
+*int a = 10||0
+*int a = 5|1,2,3,4,5|
 
 if  a >= b : 
 [

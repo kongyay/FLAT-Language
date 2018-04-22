@@ -1,0 +1,4 @@
+if 10==12-2:
+	print "true"
+else:
+	print "false"
