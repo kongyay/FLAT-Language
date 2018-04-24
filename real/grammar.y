@@ -23,13 +23,14 @@ void yyerror(const char* s,...);
 %token NUM NUM_H							//ประกาศ token
 %token T_INC T_GE T_LE T_EQ T_G T_L T_ASSIGN 
 %token T_VERT T_Bracket_L T_Bracket_R T_COLON T_COMMA T_STRING
-%token T_INT T_IF T_OR T_ELSE T_FOR T_BREAK T_PRINT
+%token T_INT T_IF T_OR T_ELSE T_FOR T_BREAK T_PRINT T_END
 %token T_SPACE T_NEWLINE T_NAME
-%type <str> T_STRING T_NAME string bool exp statement statements if_stm if_else_stm assign_stm print_stm block 
+%type <str> T_STRING T_NAME string bool exp statement statements if_stm assign_stm declare_stm print_stm block for_stm
 %type <num> NUM NUM_H 
 // เรียงลำดับความสำคัญของ token ต่างๆ
 
 %nonassoc LOW; // token มีไว้ให้ rule อ้างอิงถึงกรณีที่ต้องการให้ความสำคัญหลังสุด
+%nonassoc T_END;
 %nonassoc T_ELSE;
 %left T_AND 
 %left T_OR  
@@ -51,34 +52,39 @@ void yyerror(const char* s,...);
 
 %%
 
-program: statements T_NEWLINE {  };
+program: statements { };
 
 statements: { }
-    | statements statement T_NEWLINE { printf("%s",$2); }
+	| statement {  }
+    | statements statement { printf("stms %s\n",$2); }
 ;
 
 statement: 
-      print_stm 	{ }
-    | assign_stm 	{ }
-    | if_stm 		{ }
-	| if_else_stm   { }
-	| block			{ }
+      print_stm T_NEWLINE	{ printf("Stm - print\n"); }
+    | assign_stm T_NEWLINE	{ printf("Stm - ass\n"); }
+	| declare_stm T_NEWLINE		{ printf("Stm - declare\n");}
+    | if_stm T_NEWLINE		{ printf("Stm - if\n");}
+	| for_stm T_NEWLINE		{ printf("Stm - for\n");}
+	| block					{ printf("Stm - Block\n"); }
 ;
 
-print_stm: 	T_PRINT exp 				{ char x[50+strlen($2)]; printf("print\n");/*sprintf(x,"%sPRINTnum: %s\n",$2, "reg");*/	$$ = x; }
-			| T_PRINT string			{ char x[50+strlen($2)]; /*sprintf(x,"%sPRINTstr: %s\n",$2, "reg");*/	$$ = x; }
+print_stm: 	T_PRINT exp 				{ char x[50+strlen($2)]; printf("printNum\n");/*sprintf(x,"%sPRINTnum: %s\n",$2, "reg");*/	$$ = x; }
+			| T_PRINT string			{ char x[50+strlen($2)]; printf("printStr\n"); /*sprintf(x,"%sPRINTstr: %s\n",$2, "reg");*/	$$ = x; }
 ;
 
-assign_stm: T_NAME T_ASSIGN exp { char x[50]; /*sprintf(x,"MOV %s,%s\n",$1,$3); */ $$ = x; }
+declare_stm: T_INT assign_stm { char x[50]; printf("declare\n"); /*sprintf(x,"MOV %s,%s\n",$1,$3); */ $$ = x; }
 ;
 
-if_else_stm:   if_stm T_ELSE T_COLON statement						{ printf("else\n"); char x[50]; 	/*sprintf(x,"ELSE");*/ $$ = x; }  
+assign_stm: T_NAME T_ASSIGN exp { char x[50]; printf("assign\n"); /*sprintf(x,"MOV %s,%s\n",$1,$3); */ $$ = x; }
 ;
 
-if_stm:     T_IF bool T_COLON statement 			{ char x[50]; printf("if\n");	/*sprintf(x,"[%s] JMP nope\n %s nope: ",$2,$4);*/ $$ = x; }  
+if_stm:     T_IF bool T_COLON statement T_END								{ char x[50]; printf("if\n");	/*sprintf(x,"[%s] JMP nope\n %s nope: ",$2,$4);*/ $$ = x; }  
+			| T_IF bool T_COLON statement T_ELSE T_COLON statement T_END	{ printf("ifElse\n"); char x[50]; 	/*sprintf(x,"ELSE");*/ $$ = x; }  
 ;
 
-
+for_stm:     T_FOR assign_stm T_COMMA bool T_COMMA assign_stm T_COLON statement T_END	{ char x[50]; printf("for\n");	/*sprintf(x,"[%s] JMP nope\n %s nope: ",$2,$4);*/ $$ = x; }  
+		
+;
 
 block: 	  T_Bracket_L statements T_Bracket_R { printf("block\n"); $$ = $2; }
 ;

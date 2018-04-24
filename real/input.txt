@@ -1,4 +1,16 @@
-if 10==12-2:
+int i = 10
+i = 20
+
+if 10==12-2 : [
 	print "true"
-else:
+]
+else : [
 	print "false"
+] end
+
+for i = 10, 10 == 10, i = 11: [
+	for j = 10, 10 == 10, i = 11: [
+		print "loop"
+	]
+]
+end

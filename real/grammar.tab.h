@@ -67,21 +67,22 @@ extern int yydebug;
     T_FOR = 277,
     T_BREAK = 278,
     T_PRINT = 279,
-    T_SPACE = 280,
-    T_NEWLINE = 281,
-    T_NAME = 282,
-    LOW = 283,
-    T_AND = 284,
-    T_PLUS = 285,
-    T_MINUS = 286,
-    T_MULTIPLY = 287,
-    T_DIVIDE = 288,
-    T_MOD = 289,
-    T_NOT = 290,
-    T_LEFT = 291,
-    T_RIGHT = 292,
-    NEG = 293,
-    T_POW = 294
+    T_END = 280,
+    T_SPACE = 281,
+    T_NEWLINE = 282,
+    T_NAME = 283,
+    LOW = 284,
+    T_AND = 285,
+    T_PLUS = 286,
+    T_MINUS = 287,
+    T_MULTIPLY = 288,
+    T_DIVIDE = 289,
+    T_MOD = 290,
+    T_NOT = 291,
+    T_LEFT = 292,
+    T_RIGHT = 293,
+    NEG = 294,
+    T_POW = 295
   };
 #endif
 
@@ -96,7 +97,7 @@ union YYSTYPE
   char c;
   char* str;
 
-#line 100 "grammar.tab.h" /* yacc.c:1909  */
+#line 101 "grammar.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
