@@ -11,9 +11,15 @@ extern FILE* yyin;
 void yyerror(const char* s,...);
 struct OP* opMaker(char* cmd,char* a,char* b);
 struct OP* ifMaker(struct OP* cmpStm,struct OP* doStm);
+struct OP* ifElseMaker(struct OP* cmpStm,struct OP* doStm,struct OP* elseStm);
 struct OP* labelMaker(char* label);
 struct OP* forMaker(struct OP* initStm,struct OP* incStm,struct OP* ifStm);
+struct OP* printMaker(char* string);
+
+void addData(char* name,int type,char* value);
+struct DATA*  addString(char* value);
 void addChild(struct OP* parent,struct OP* child);
+void printData();
 void printAll(struct OP* printAll,int indent);
 void printOptimized(struct OP* parent);
 char* itoa(int d);
@@ -33,6 +39,12 @@ char* itoa(int d);
 		int count;
 		int id;
     };
+	struct DATA {
+		char name[50];
+		char type[5];
+		char value[50];
+		struct DATA* next;
+	};
 }
 
 %union {              /* define stack type */
@@ -40,6 +52,7 @@ char* itoa(int d);
   char c;
   char* str;
   struct OP* op;
+  struct DATA* data;
 }
 
 %token NUM NUM_H							//ประกาศ token
@@ -47,9 +60,10 @@ char* itoa(int d);
 %token T_VERT T_Bracket_L T_Bracket_R T_COLON T_COMMA T_STRING
 %token T_INT T_IF T_OR T_ELSE T_FOR T_BREAK T_PRINT T_END
 %token T_SPACE T_NEWLINE T_NAME
-%type <str> T_STRING T_NAME string cmp_tks
+%type <str>  T_NAME cmp_tks T_STRING
 %type <num> NUM NUM_H exp 
 %type <op>  statement statements if_stm assign_stm declare_stm print_stm block for_stm compare var_exp
+%type <data> string
 // เรียงลำดับความสำคัญของ token ต่างๆ
 
 %nonassoc LOW; // token มีไว้ให้ rule อ้างอิงถึงกรณีที่ต้องการให้ความสำคัญหลังสุด
@@ -75,7 +89,7 @@ char* itoa(int d);
 
 %%
 
-program: statements { printf("REACHED\n"); printAll($1,0); printOptimized($1); };
+program: statements { printf("REACHED\n\n\n"); printData(); printAll($1,0); printOptimized($1); };
 
 statements: { }
 	| statement { $$ = (struct OP*)malloc(sizeof(struct OP)); addChild($$,$1); }
@@ -91,8 +105,8 @@ statement:
 	| block						{ printf("Stm - Block\n");		$$ = $1;}
 ;
 
-print_stm: 	T_PRINT exp 				{ $$ = opMaker("PRINT",itoa($2),""); }
-			| T_PRINT string			{ $$ = opMaker("PRINT",$2,""); }
+print_stm: 	T_PRINT exp 				{ $$ = printMaker(itoa($2)); }
+			| T_PRINT string			{ $$ = printMaker($2->name); }
 ;
 
 declare_stm: T_INT T_NAME T_ASSIGN exp { printf("declare+assign\n"); $$ = opMaker($2,"DQ",itoa($4)); }
@@ -104,7 +118,7 @@ assign_stm: T_NAME T_ASSIGN exp { printf("assign\n"); $$ = opMaker("MOV",$1,itoa
 ;
 
 if_stm:     T_IF compare T_COLON statement T_END								{ printf("if\n"); $$ = ifMaker($2,$4);}  
-			| T_IF compare T_COLON statement T_ELSE T_COLON statement T_END	{ printf("ifElse\n"); $$ = opMaker("endif:","",""); addChild($$,$2); addChild($$,opMaker($2->extra2,"endif","")); addChild($$,$4); addChild($$,opMaker($2->extra1,"endif","")); addChild($$,$7); }  
+			| T_IF compare T_COLON statement T_ELSE T_COLON statement T_END	{ printf("ifElse\n"); $$ = ifElseMaker($2,$4,$7); }  
 ;
 
 for_stm:     T_FOR assign_stm T_COMMA assign_stm T_COMMA if_stm	{ printf("for\n"); $$ = forMaker($2,$4,$6);  }  
@@ -114,10 +128,10 @@ for_stm:     T_FOR assign_stm T_COMMA assign_stm T_COMMA if_stm	{ printf("for\n"
 block: 	  T_Bracket_L statements T_Bracket_R { $$ = $2; }
 ;
 
-string:		T_STRING						{ $$ = $1;	}
-			| exp T_PLUS T_STRING			{ $$ = $3; 	}
-			| T_STRING T_PLUS exp			{ $$ = $1;	}
-			| T_STRING T_PLUS T_STRING		{ $$ = $1;	}
+string:		T_STRING						{ $$ = addString($1);   }
+			| exp T_PLUS T_STRING			{ char x[strlen($3)+10]; sprintf(x,"%d%s",$1,$3); $$ = addString(x); 	}
+			| T_STRING T_PLUS exp			{ char x[strlen($1)+10]; sprintf(x,"%s%d",$1,$3); $$ = addString(x); 	}
+			| T_STRING T_PLUS T_STRING		{ char x[strlen($3)+strlen($1)+1]; sprintf(x,"%s%s",$1,$3); $$ = addString(x); 	}
 ;
 
 
@@ -158,10 +172,17 @@ exp: 		NUM						{ $$ = $1; 				}
 
 int reg[29] = {0};
 int id = 0;
+struct DATA *data,*datahead;
 
 // main function
 int main() {
 	printf("================= FLAT Language compiler ==============\n> ");
+	data = (struct DATA*)malloc(sizeof(struct DATA));
+	sprintf(data->name,"%s","");
+	sprintf(data->type,"%s","");
+	sprintf(data->value,"%s","");
+	data->next = NULL;
+	datahead = data;
 	// Loop parse ในกรณี input file
 	yyin = stdin;
 	do {
@@ -204,16 +225,38 @@ struct OP* ifMaker(struct OP* cmpStm,struct OP* doStm) {
 	addChild(ifOp,doStm); 
 	return ifOp;
 }
+struct OP* ifElseMaker(struct OP* cmpStm,struct OP* doStm,struct OP* elseStm) {
+	struct OP* ifOp = labelMaker("endif"); 
+	struct OP* elseOp = labelMaker("else"); 
+	addChild(ifOp,cmpStm); 
+	addChild(ifOp,opMaker(cmpStm->extra2,elseOp->cmd,"")); 
+	addChild(ifOp,doStm); 
+	addChild(ifOp,elseOp); 
+	addChild(ifOp,cmpStm); 
+	addChild(ifOp,opMaker(cmpStm->extra1,ifOp->cmd,"")); 
+	addChild(ifOp,elseStm); 
+	return ifOp;
+}
 
 struct OP* forMaker(struct OP* initStm,struct OP* incStm,struct OP* ifStm) {
 	struct OP* forOp = labelMaker("endfor"); 
-	struct OP* startLabel =labelMaker("startloop");
+	struct OP* startLabel = labelMaker("startloop");
 	addChild(forOp,startLabel); 
 	addChild(forOp,initStm); 
 	addChild(forOp,ifStm); 
 	addChild(ifStm,incStm); 
 	addChild(ifStm,opMaker("JMP",startLabel->cmd,""));
 	return forOp;
+}
+
+struct OP* printMaker(char* string) {
+	// mov  dx, msg      ; the address of or message in dx
+    // mov  ah, 9        ; ah=9 - "print string" sub-function
+    // int  0x21         ; call dos services
+	struct OP* printOp = opMaker("int","0x21","");
+	addChild(printOp,opMaker("MOV","dx",string)); 
+	addChild(printOp,opMaker("MOV","ah","9")); 
+	return printOp;
 }
 
 void addChild(struct OP* parent,struct OP* child) {
@@ -226,8 +269,35 @@ char* itoa(int d) {
 	return x;
 }
 
+void addData(char* name,int type,char* value) {
+
+}
+
+struct DATA* addString(char* value) {
+	struct DATA* newdata = (struct DATA*)malloc(sizeof(struct DATA));
+	sprintf(newdata->name,"string%d",id++);
+	sprintf(newdata->type,"%s","string");
+	strcpy(newdata->value,value);
+	newdata->next = NULL;
+	data->next = newdata;
+	data = data->next;
+	return newdata;
+}
+
+void printData()  {
+	printf(".data\n");
+	datahead = datahead->next;
+	data = datahead;
+	while(data != NULL) {
+		printf("%s db \"%s\"\n",data->name,data->value);
+		data = data->next;
+	}
+	printf(".code\n");
+}
 
 void printAll(struct OP* parent,int indent) {
+	
+
 	int i;
 	for(i=0;i<parent->count;i++) {
 		printAll(parent->child[i],indent+1);
@@ -236,7 +306,8 @@ void printAll(struct OP* parent,int indent) {
 		printf("\t");
 	}
 
-	printf("%s ",parent->cmd);
+	if(strlen(parent->cmd)>0)
+		printf("%s ",parent->cmd);
 	if(strlen(parent->a)>0)
 		printf("%s",parent->a);
 	if(strlen(parent->b)>0)

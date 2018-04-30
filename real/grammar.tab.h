@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 25 "grammar.y" /* yacc.c:1909  */
+#line 31 "grammar.y" /* yacc.c:1909  */
 
     struct OP {
         char cmd[20];
@@ -52,8 +52,14 @@ extern int yydebug;
 		int count;
 		int id;
     };
+	struct DATA {
+		char name[50];
+		char type[5];
+		char value[50];
+		struct DATA* next;
+	};
 
-#line 57 "grammar.tab.h" /* yacc.c:1909  */
+#line 63 "grammar.tab.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -107,14 +113,15 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 38 "grammar.y" /* yacc.c:1909  */
+#line 50 "grammar.y" /* yacc.c:1909  */
               /* define stack type */
   int num;
   char c;
   char* str;
   struct OP* op;
+  struct DATA* data;
 
-#line 118 "grammar.tab.h" /* yacc.c:1909  */
+#line 125 "grammar.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -49,17 +49,17 @@ void multComment();
 "]"[\t\n ]+		    {return T_Bracket_R;}
 ":"[\t\n ]+         {return T_COLON;}
 ", "                {return T_COMMA;}
-"\""[^\"]*"\""      { yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
-"\'"[^\']*"\'"      { yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
+"\""[^\"]*"\""		{yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
+"\'"[^\']*"\'"    	{yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 
 "int"[\t ]+		        {return T_INT;}
-"if"[\t\n ]+                {return T_IF;}
-"end"                {return T_END;}
-"or"[\t\n ]+                {return T_OR;}
-"else"[\t\n ]+              {return T_ELSE;}
-"for"[\t ]+               {return T_FOR;}
-"break"[\t ]+             {return T_BREAK;}
-"print"[\t ]+             {return T_PRINT;}
+"if"[\t\n ]+            {return T_IF;}
+"end"                	{return T_END;}
+"or"[\t\n ]+            {return T_OR;}
+"else"[\t\n ]*          {return T_ELSE;}
+"for"[\t ]+             {return T_FOR;}
+"break"[\t ]+           {return T_BREAK;}
+"print"[\t ]+           {return T_PRINT;}
 
 
 "("		            {return T_LEFT;}
@@ -68,8 +68,8 @@ void multComment();
 ^\n+                {} //ignore empty line ( )
 \n+		            {return T_NEWLINE;}
 [\t ]+              {}
-[A-Za-z]+[A-Za-z0-9]*              {  yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME;}
-.                   {yyerror("Invalid character");}
+[A-Za-z]+[A-Za-z0-9]*              	{ yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
+.                   				{ yyerror("Invalid character"); }
 %%
 int convHex(char* input) {
     char* p = input;

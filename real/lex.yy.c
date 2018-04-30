@@ -397,7 +397,7 @@ static yyconst flex_int16_t yy_accept[96] =
        28,    6,    2,    5,    4,    0,   27,    9,   10,    8,
        45,   45,   25,   26,   45,   45,   45,   45,   45,   45,
        45,   45,   22,   42,    5,    3,   45,   45,   33,   45,
-       32,   45,   34,   45,   45,   45,   36,   31,   45,   45,
+       32,   45,   34,   45,   45,   35,   36,   31,   45,   45,
        35,   45,   37,   38,    0
 
     } ;
@@ -993,13 +993,13 @@ case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
 #line 52 "grammar.l"
-{ yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
+{yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
 #line 53 "grammar.l"
-{ yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
+{yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
@@ -1079,12 +1079,12 @@ YY_RULE_SETUP
 case 45:
 YY_RULE_SETUP
 #line 71 "grammar.l"
-{  yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME;}
+{ yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 72 "grammar.l"
-{yyerror("Invalid character");}
+{ yyerror("Invalid character"); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
