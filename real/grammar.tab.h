@@ -39,6 +39,21 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 25 "grammar.y" /* yacc.c:1909  */
+
+    struct OP {
+        char cmd[20];
+		char a[50];
+		char b[50];
+		char extra1[5];
+		char extra2[5];
+        struct OP* child[100];
+		int count;
+		int id;
+    };
+
+#line 57 "grammar.tab.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -53,36 +68,37 @@ extern int yydebug;
     T_EQ = 263,
     T_G = 264,
     T_L = 265,
-    T_ASSIGN = 266,
-    T_VERT = 267,
-    T_Bracket_L = 268,
-    T_Bracket_R = 269,
-    T_COLON = 270,
-    T_COMMA = 271,
-    T_STRING = 272,
-    T_INT = 273,
-    T_IF = 274,
-    T_OR = 275,
-    T_ELSE = 276,
-    T_FOR = 277,
-    T_BREAK = 278,
-    T_PRINT = 279,
-    T_END = 280,
-    T_SPACE = 281,
-    T_NEWLINE = 282,
-    T_NAME = 283,
-    LOW = 284,
-    T_AND = 285,
-    T_PLUS = 286,
-    T_MINUS = 287,
-    T_MULTIPLY = 288,
-    T_DIVIDE = 289,
-    T_MOD = 290,
-    T_NOT = 291,
-    T_LEFT = 292,
-    T_RIGHT = 293,
-    NEG = 294,
-    T_POW = 295
+    T_NE = 266,
+    T_ASSIGN = 267,
+    T_VERT = 268,
+    T_Bracket_L = 269,
+    T_Bracket_R = 270,
+    T_COLON = 271,
+    T_COMMA = 272,
+    T_STRING = 273,
+    T_INT = 274,
+    T_IF = 275,
+    T_OR = 276,
+    T_ELSE = 277,
+    T_FOR = 278,
+    T_BREAK = 279,
+    T_PRINT = 280,
+    T_END = 281,
+    T_SPACE = 282,
+    T_NEWLINE = 283,
+    T_NAME = 284,
+    LOW = 285,
+    T_AND = 286,
+    T_PLUS = 287,
+    T_MINUS = 288,
+    T_MULTIPLY = 289,
+    T_DIVIDE = 290,
+    T_MOD = 291,
+    T_NOT = 292,
+    T_LEFT = 293,
+    T_RIGHT = 294,
+    NEG = 295,
+    T_POW = 296
   };
 #endif
 
@@ -91,13 +107,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 17 "grammar.y" /* yacc.c:1909  */
+#line 38 "grammar.y" /* yacc.c:1909  */
               /* define stack type */
   int num;
   char c;
   char* str;
+  struct OP* op;
 
-#line 101 "grammar.tab.h" /* yacc.c:1909  */
+#line 118 "grammar.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

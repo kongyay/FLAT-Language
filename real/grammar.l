@@ -8,8 +8,13 @@
 #include "grammar.tab.h"
 extern void yyerror(const char* s,...);
 int convHex(char* input);
+void singleComment();
+void multComment();
 %}
 %%
+
+"#"[^\n]*           { singleComment(); }
+"/-"                { multComment(); }
 
 "0"[Xx][0-9]+ 	    { yylval.num = atoi(yytext+2); return NUM_H; }
 [0-9]+ 	            { yylval.num = atoi(yytext); return NUM; }
@@ -23,6 +28,7 @@ int convHex(char* input);
 "=="		        {return T_EQ;}
 ">"		            {return T_G;}
 "<"		            {return T_L;}
+"!="		        {return T_NE;}
 "="		            {return T_ASSIGN;}
 
 "+"		            {return T_PLUS;}
@@ -58,7 +64,8 @@ int convHex(char* input);
 
 "("		            {return T_LEFT;}
 ")"		            {return T_RIGHT;}
-"("[ ]*")"		    {} //ignore empty ( )
+"("[ ]*")"		    {} //ignore empty char ( )
+^\n+                {} //ignore empty line ( )
 \n+		            {return T_NEWLINE;}
 [\t ]+              {}
 [A-Za-z]+[A-Za-z0-9]*              {  yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME;}
@@ -71,4 +78,22 @@ int convHex(char* input) {
     }
     *p = '\0'; 
     return (int)strtol(input, NULL, 16);
+}
+
+void singleComment() {
+	while (input() != '\n');
+		return;
+}
+
+void multComment() {
+	for(;;) {
+		while (input() != '-');
+		if (input() != '/') {
+			unput(yytext[yyleng-1]);
+		} else {
+            if(input() != '\n')
+                unput(yytext[yyleng-1]);
+			return;
+		}
+	}	
 }

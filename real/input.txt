@@ -1,16 +1,23 @@
+/- int a
 int i = 10
-i = 20
+i = i + 20
 
-if 10==12-2 : [
+if i<12-2 : [
 	print "true"
 ]
 else : [
 	print "false"
 ] end
+-/
 
-for i = 10, 10 == 10, i = 11: [
-	for j = 10, 10 == 10, i = 11: [
-		print "loop"
-	]
+
+for i = 10 , i = i+1, if i < 10 : [
+	for j = 10 , j = j+1, if j < 10 : [
+		if a > 10:
+			print "wow"
+		else: 
+			print "nope" 
+		end
+	] end
 ]
 end
