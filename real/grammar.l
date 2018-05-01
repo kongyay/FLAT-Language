@@ -60,7 +60,7 @@ void multComment();
 "for"[\t ]+             {return T_FOR;}
 "break"[\t ]+           {return T_BREAK;}
 "print"[\t ]+           {return T_PRINT;}
-"newline"[\t ]+           {return T_PRINTLN;}
+"newline"[\t ]+         {return T_NEWLINE;}
 
 
 "("		            {return T_LEFT;}

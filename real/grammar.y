@@ -26,7 +26,7 @@ void addChild(struct OP* parent,struct OP* child);
 void printProgram();
 void printCode(struct OP* printCode,int indent);
 void printOptimized(struct OP* parent);
-char* itoa(int d);
+char* imm(int d);
 
 #define hash_size 100
 
@@ -64,7 +64,7 @@ struct DATA {
 %token T_SPACE T_NEWLINE T_NAME
 %type <str>  T_NAME cmp_tks T_STRING
 %type <num> NUM NUM_H exp 
-%type <op>  statement statements if_stm assign_stm declare_stm print_stm block for_stm compare var_exp
+%type <op>  statement statements if_stm assign_stm declare_stm print_stm block for_stm compare var_exp T_PRINTLN
 %type <data> string
 // เรียงลำดับความสำคัญของ token ต่างๆ
 
@@ -104,10 +104,11 @@ statement:
 	| declare_stm T_NEWLINE		{ printf("Stm - declare\n"); 	$$ = $1;}
     | if_stm T_NEWLINE			{ printf("Stm - if\n"); 		$$ = $1;}
 	| for_stm T_NEWLINE			{ printf("Stm - for\n"); 		$$ = $1;}
+	| T_PRINTLN					{ printf("Stm - newline\n");	$$ = $1;}
 	| block						{ printf("Stm - Block\n");		$$ = $1;}
 ;
 
-print_stm: 	T_PRINT exp 				{ struct DATA* x = addString(itoa($2)); $$ = printMaker(x->name); }
+print_stm: 	T_PRINT exp 				{ struct DATA* x = addString(imm($2)); $$ = printMaker(x->name); }
 			| T_PRINT T_NAME			{ $$ = printMaker($2); }
 			| T_PRINT string			{ $$ = printMaker($2->name); }
 ;
@@ -116,9 +117,9 @@ declare_stm: T_INT T_NAME T_ASSIGN exp { printf("declare+assign\n"); checkVar($2
 			| T_INT T_NAME { printf("declare\n"); checkVar($2,0); $$ = NULL; addInt($2,0); }
 ;
 
-assign_stm: T_NAME T_ASSIGN exp { printf("assign\n"); checkVar($1,1); $$ = opMaker("MOV",$1,itoa($3)); }
-			| T_NAME T_ASSIGN T_NAME { printf("assign\n"); checkVar($1,1); checkVar($3,1); if(strcmp($1,$3)==0) $$ = NULL; else {$$ = opMaker("MOV",$1,"ax"); addChild($$,opMaker("MOV","ax",$3));} }
-			| T_NAME T_ASSIGN var_exp { printf("assign\n"); checkVar($1,1); if(strcmp($1,$3->a)==0) $$ = $3; else { $$ = opMaker("MOV",$1,"ax"); addChild($$,$3); addChild($$,opMaker("MOV","ax",$3->a)); } } 
+assign_stm: T_NAME T_ASSIGN exp { printf("assign\n"); checkVar($1,1); $$ = opMaker("MOVQ",imm($3),$1); }
+			| T_NAME T_ASSIGN T_NAME { printf("assign\n"); checkVar($1,1); checkVar($3,1); if(strcmp($1,$3)==0) $$ = NULL; else {$$ = opMaker("MOVQ","%rax",$1); addChild($$,opMaker("MOVQ",$3,"%rax"));} }
+			| T_NAME T_ASSIGN var_exp { printf("assign\n"); checkVar($1,1); if(strcmp($1,$3->a)==0) $$ = $3; else { $$ = opMaker("MOVQ","%rax",$1); addChild($$,$3); addChild($$,opMaker("MOVQ",$3->a,"%rax")); } } 
 ;
 
 if_stm:     T_IF compare T_COLON statement T_END								{ printf("if\n"); $$ = ifMaker($2,$4);}  
@@ -140,9 +141,9 @@ string:		T_STRING						{ $$ = addString($1);   }
 
 
 
-compare:	T_NAME cmp_tks exp					{ printf("cmp\n"); $$ = opMaker("CMP",$1,itoa($3)); 	 	sprintf($$->extra1,"J%c%c",$2[0],$2[1]); sprintf($$->extra2,"J%c%c",$2[2],$2[3]); }
-			| T_NAME cmp_tks T_NAME				{ printf("cmp\n"); $$ = opMaker("CMP",$1,$3); 				sprintf($$->extra1,"J%c%c",$2[0],$2[1]); sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  }
-			| exp cmp_tks exp					{ printf("cmp\n"); $$ = opMaker("CMP",itoa($1),itoa($3));   sprintf($$->extra1,"J%c%c",$2[0],$2[1]); sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  }
+compare:	T_NAME cmp_tks exp					{ printf("cmp\n"); $$ = opMaker("CMPQ",imm($3),$1); 	 	sprintf($$->extra1,"J%c%c",$2[0],$2[1]); sprintf($$->extra2,"J%c%c",$2[2],$2[3]); }
+			| T_NAME cmp_tks T_NAME				{ printf("cmp\n"); $$ = opMaker("CMPQ",$3,$1); 				sprintf($$->extra1,"J%c%c",$2[0],$2[1]); sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  }
+			| exp cmp_tks exp					{ printf("cmp\n"); $$ = opMaker("CMPQ",imm($3),imm($1));   sprintf($$->extra1,"J%c%c",$2[0],$2[1]); sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  }
 ;
 cmp_tks:		T_EQ	{ $$ = "EQNE"; }
 				| T_NE 	{ $$ = "NEEQ"; }
@@ -153,14 +154,14 @@ cmp_tks:		T_EQ	{ $$ = "EQNE"; }
 
 ;
 
-var_exp: 	T_NAME T_PLUS exp			{ checkVar($1,1); $$ = opMaker("ADD",$1,itoa($3)); 		}
-			| T_NAME T_MINUS exp		{ checkVar($1,1); $$ = opMaker("SUB",$1,itoa($3)); 		}
+var_exp: 	T_NAME T_PLUS exp			{ checkVar($1,1); $$ = opMaker("ADDQ",imm($3),$1); 		}
+			| T_NAME T_MINUS exp		{ checkVar($1,1); $$ = opMaker("SUBQ",imm($3),$1); 		}
 
-			| exp T_PLUS T_NAME			{ checkVar($3,1); $$ = opMaker("ADD",$3,itoa($1)); 		}
-			| exp T_MINUS T_NAME		{ checkVar($3,1); $$ = opMaker("SUB",$3,itoa($1)); 		}
+			| exp T_PLUS T_NAME			{ checkVar($3,1); $$ = opMaker("ADDQ",imm($1),$3); 		}
+			| exp T_MINUS T_NAME		{ checkVar($3,1); $$ = opMaker("SUBQ",imm($1),$3); 		}
 
-			| T_NAME T_PLUS T_NAME		{ checkVar($1,1); checkVar($3,1); $$ = opMaker("ADD",$1,$3); 		}
-			| T_NAME T_MINUS T_NAME		{ checkVar($1,1); checkVar($3,1); $$ = opMaker("SUB",$1,$3); 		}
+			| T_NAME T_PLUS T_NAME		{ checkVar($1,1); checkVar($3,1); $$ = opMaker("ADDQ",$3,$1); 		}
+			| T_NAME T_MINUS T_NAME		{ checkVar($1,1); checkVar($3,1); $$ = opMaker("SUBQ",$3,$1); 		}
 
 			| T_MINUS T_NAME  %prec NEG { checkVar($2,1); $$ =  opMaker("NEG",$2,""); 			}	
 ;	
@@ -187,11 +188,12 @@ int id = 0;
 struct DATA *dataTable[hash_size];
 char varName[hash_size][50];
 int varCount = 0;
-int havePrintInt = 0;
 
 // main function
 int main() {
 	printf("================= FLAT Language compiler ==============\n> ");
+	addVar("FormatStr","%s\\12\\0");
+	addVar("FormatInt","%d\\12\\0");
 	// Loop parse ในกรณี input file
 	yyin = stdin;
 	do {
@@ -222,7 +224,7 @@ struct OP* opMaker(char* cmd,char* a,char* b) {
 struct OP* labelMaker(char* label) {
 	struct OP* newOP = (struct OP*)malloc(sizeof(struct OP));
 	newOP->id = id++;
-	sprintf(newOP->cmd,"%s%d:",label,newOP->id);
+	sprintf(newOP->cmd,"%s%d",label,newOP->id);
 	newOP->count = 0;
 	return newOP;
 }
@@ -260,33 +262,24 @@ struct OP* forMaker(struct OP* initStm,struct OP* incStm,struct OP* ifStm) {
 }
 
 struct OP* printMaker(char* varName) {
-	// mov  dx, msg      ; the address of or message in dx
-    // mov  ah, 9        ; ah=9 - "print string" sub-function
-    // int  0x21         ; call dos services
-	// integer...
-	// "MOV cx, [stepCounter]\n");
-	// "push cx   \n");
-	// "call printInt\n");
+	// movl 	$FormatStr, %edi
+	// movl 	$ToPrint, %esi
+	// movl 	$0, %eax
+    // call		printf
 	struct OP* printOp;
 	struct DATA* toPrint = lookup(varName);
 	if(toPrint==NULL) {
 		yyerror("Variable \"%s\" has not been declared yet.",varName);
 		return NULL;
 	}
-	if(toPrint->isInt == 1) {
-		havePrintInt = 1;
-		char addrstring[strlen(varName)+3];
-		sprintf(addrstring,"[%s]",varName);
-		printOp = opMaker("CALL","printInt","");
-		addChild(printOp,opMaker("MOV","cx",addrstring)); 	
-		addChild(printOp,opMaker("PUSH","cx","")); 	
-	} else {
-		char addrstring[strlen(varName)+8];
-		sprintf(addrstring,"offset %s",varName);
-		printOp = opMaker("int","0x21","");
-		addChild(printOp,opMaker("MOV","dx",addrstring)); 
-		addChild(printOp,opMaker("MOV","ah","9")); 
-	}
+
+	printOp = opMaker("CALL","printf","");
+	addChild(printOp,opMaker("MOVL",varName,"%esi"));
+
+	if(toPrint->isInt == 1) 	
+		addChild(printOp,opMaker("MOVL","FormatInt","%esi")); 	
+ 	else 
+		addChild(printOp,opMaker("MOVL","FormatStrng","%esi"));
 	
 	return printOp;
 }
@@ -297,9 +290,9 @@ void addChild(struct OP* parent,struct OP* child) {
 	parent->child[(parent->count)++] = child;
 }
 
-char* itoa(int d) {
+char* imm(int d) {
 	char* x = malloc (sizeof (char) * 50);
-	sprintf(x, "%d", d); 
+	sprintf(x, "$%d", d); 
 	return x;
 }
 
@@ -353,7 +346,7 @@ struct DATA *addVar(char *name, char *value)
 }
 
 struct DATA* addInt(char *name, int value) {
-	struct DATA *newData = addVar(name, itoa(value));
+	struct DATA *newData = addVar(name, imm(value)+1);
 	newData->isInt = 1;
 	return newData;
 }
@@ -368,45 +361,23 @@ struct DATA* addString(char* value) {
 
 
 void printProgram(struct OP* parent)  {
-	printf("org  0x100\n");
-	printf(".data\n");
 	int i;
 	for(i = 0;i<varCount;i++) {
 		struct DATA* data = lookup(varName[i]);
 		if(data != NULL)
-			printf("%s dw %s\n",data->name,data->value);
+			if(data->isInt==1) 
+				printf("%s:\n\t%s %s\n",data->name,".quad",data->value);
+			else
+				printf("%s:\n\t%s \"%s\"\n",data->name,".string",data->value);
+			
 	}
-	printf(".code\n");
+	printf(".globl main\n");
+	printf("main:\n");
+	printf("	pushq   %%rbp\n");
 	printCode(parent,0);
 	// Exit Int.
-	printf("MOV  ah, 0x4c\n");
-    printf("INT  0x21\n");
-	// Print Int Proc
-	if(havePrintInt) {
-		printf("PROC    printInt\n");
-		printf("	PUSH bp\n");
-		printf("	MOV bp, sp\n");
-		printf("	MOV ax, [bp+4]\n");
-		printf("	MOV cl, '$'  \n");
-		printf("	MOV bx,100\n");
-		printf("	MOV [bx], cl\n");
-		printf("NextDigit:\n");
-		printf("	MOV ah, 0\n");
-		printf("	MOV cl, 10\n");
-		printf("	DIV cl         \n");
-		printf("	DEC bx\n");
-		printf("	ADD ah, '0'     \n");
-		printf("	MOV [bx], ah  \n");
-		printf("	CMP al, 0\n");
-		printf("	JNE NextDigit\n");
-		printf("Print:  \n");
-		printf("	MOV dx, bx\n");
-		printf("	MOV ah, 9h\n");
-		printf("	INT 21h\n");
-		printf(		"pop bp\n");
-		printf("	ret 2\n");
-		printf("ENDP printInt\n");
-	}
+	printf("popq %%rbp\n");
+    printf("ret\n\n\n");
 }
 
 void printCode(struct OP* parent,int indent) {
@@ -418,12 +389,15 @@ void printCode(struct OP* parent,int indent) {
 		printf("\t");
 	}
 
-	if(strlen(parent->cmd)>0)
-		printf("%s ",parent->cmd);
-	if(strlen(parent->a)>0)
-		printf("%s",parent->a);
-	if(strlen(parent->b)>0)
-		printf(", %s\n",parent->b);
+	if(strlen(parent->b)>0) { // 2-args op
+		printf("%s	%s, %s\n",parent->cmd,parent->a,parent->b); return;
+	}
+	if(strlen(parent->a)>0) {// 1-arg op
+		printf("%s	%s\n",parent->cmd,parent->a); return;
+	}
+	if(strlen(parent->cmd)>0) {// Label
+		printf("%s:\n",parent->cmd); return;
+	}
 	else
 		printf("\n");
 }
