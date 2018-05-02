@@ -2,8 +2,12 @@
 
 int main( int argc, char *argv[] )
 {
-	long a = 0;
-	long b = 1000;
-	printf("%ld",a-b);
+	long int i = 10;
+	long int j = 0;
+	long int a = 0;
+	if(i>=10) {
+		printf("wow");
+	}
+
 	return 0;
 }

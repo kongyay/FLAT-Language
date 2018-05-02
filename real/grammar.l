@@ -16,7 +16,7 @@ void multComment();
 "#"[^\n]*           { singleComment(); }
 "/-"                { multComment(); }
 
-"0"[Xx][0-9]+ 	    { yylval.num = atoi(yytext+2); return NUM_H; }
+"0"[Xx][0-9]+ 	    { yylval.num = (int)strtol(yytext+2, NULL, 16); return NUM; }
 [0-9]+ 	            { yylval.num = atoi(yytext); return NUM; }
 [0-9]+"."[0-9]* 	{ yylval.num = (int)atof(yytext); yyerror("Float/Double are not supported. (Floored to int)"); return NUM;}
 [0-9]*"."[0-9]+ 	{ yylval.num = (int)atof(yytext); yyerror("Float/Double are not supported. (Floored to int)"); return NUM;}
@@ -54,13 +54,12 @@ void multComment();
 
 "int"[\t ]+		        {return T_INT;}
 "if"[\t\n ]+            {return T_IF;}
-"end"                	{return T_END;}
-"or"[\t\n ]+            {return T_OR;}
+"end"           		{return T_END;}
 "else"[\t\n ]*          {return T_ELSE;}
 "for"[\t ]+             {return T_FOR;}
-"break"[\t ]+           {return T_BREAK;}
-"print"[\t ]+           {return T_PRINT;}
-"newline"[\t ]+         {return T_NEWLINE;}
+"print"[\t ]*           {return T_PRINT;}
+"printh"[\t ]*          {return T_PRINTH;}
+"newline"       		{return T_PRINTLN;}
 
 
 "("		            {return T_LEFT;}

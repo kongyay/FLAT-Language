@@ -1,35 +1,58 @@
-	.file	"src.c"
-	.section	.rodata
-.LC0:
-	.string	"%ld"
-	.text
-	.globl	main
-	.type	main, @function
+.FormatStr:
+        .string "%s\0"
+.FormatInt:
+        .string "%ld\0"
+.FormatHex:
+        .string "%x\0"
+.NewLine:
+        .string "\12\0"
+.string18:
+        .string " \0"
+.globl main
 main:
-.LFB0:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$32, %rsp
-	movl	%edi, -20(%rbp)
-	movq	%rsi, -32(%rbp)
-	movq	$0, -16(%rbp)
-	movq	$1000, -8(%rbp)
-	movq	-16(%rbp), %rax
-	subq	-8(%rbp), %rax
-	movq	%rax, %rsi
-	movl	$.LC0, %edi
-	movl	$0, %eax
-	call	printf
-	movl	$0, %eax
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE0:
-	.size	main, .-main
-	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609"
-	.section	.note.GNU-stack,"",@progbits
+        PUSHQ   %rbp
+
+        MOVQ    %rsp, %rbp
+        SUBQ    $32, %rsp
+        MOVL    %edi, -20(%rbp)
+        MOVQ    %rsi, -32(%rbp)
+        MOVQ    $0, -8(%rbp)
+        MOVQ    $0, -16(%rbp)
+                MOVQ    $16, -8(%rbp)
+                .startloop33:
+                        CMPQ    $50, -8(%rbp)
+                        JGE     .endif30
+                                        MOVQ    $0, -16(%rbp)
+                                        .startloop25:
+                                                        MOVQ    -16(%rbp), %rax
+                                                CMPQ    -8(%rbp), %rax
+                                                JG      .endif22
+                                                                MOVQ    -16(%rbp), %rax
+                                                                MOVQ    %rax, %rsi
+                                                                MOVL    $.FormatHex, %edi
+                                                                MOVL    $0, %eax
+                                                        CALL    printf
+                                                                MOVL    $.string18, %edi
+                                                                MOVL    $0, %eax
+                                                        CALL    printf
+
+                                                        ADDQ    $1, -16(%rbp)
+                                                        MOVQ    -16(%rbp), %rax
+                                                MOVQ    %rax, -16(%rbp)
+                                                JMP     .startloop25
+                                        .endif22:
+                                .endfor24:
+                                        MOVL    $.NewLine, %edi
+                                        MOVL    $0, %eax
+                                CALL    printf
+
+                                ADDQ    $1, -8(%rbp)
+                                MOVQ    -8(%rbp), %rax
+                        MOVQ    %rax, -8(%rbp)
+                        JMP     .startloop33
+                .endif30:
+        .endfor32:
+
+MOVL    $0, %eax
+leave
+ret

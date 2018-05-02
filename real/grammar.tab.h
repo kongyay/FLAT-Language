@@ -63,18 +63,18 @@ extern int yydebug;
     T_STRING = 273,
     T_INT = 274,
     T_IF = 275,
-    T_OR = 276,
-    T_ELSE = 277,
-    T_FOR = 278,
-    T_BREAK = 279,
-    T_PRINT = 280,
-    T_PRINTLN = 281,
-    T_END = 282,
-    T_SPACE = 283,
-    T_NEWLINE = 284,
-    T_NAME = 285,
-    LOW = 286,
-    T_AND = 287,
+    T_ELSE = 276,
+    T_FOR = 277,
+    T_PRINT = 278,
+    T_PRINTH = 279,
+    T_PRINTLN = 280,
+    T_END = 281,
+    T_SPACE = 282,
+    T_NEWLINE = 283,
+    T_NAME = 284,
+    LOW = 285,
+    T_AND = 286,
+    T_OR = 287,
     T_PLUS = 288,
     T_MINUS = 289,
     T_MULTIPLY = 290,
@@ -93,7 +93,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 52 "grammar.y" /* yacc.c:1909  */
+#line 58 "grammar.y" /* yacc.c:1909  */
               /* define stack type */
   int num;
   char c;
