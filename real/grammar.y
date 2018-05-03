@@ -76,7 +76,6 @@ void showToken();
 %type <data> string
 // เรียงลำดับความสำคัญของ token ต่างๆ
 
-%nonassoc LOW; // token มีไว้ให้ rule อ้างอิงถึงกรณีที่ต้องการให้ความสำคัญหลังสุด
 %nonassoc T_END;
 %nonassoc T_ELSE;
 %right T_PRINT T_PRINTH
@@ -147,7 +146,7 @@ assign_stm: T_INT T_NAME assign_part
             | T_NAME assign_part 
                     { 
                         //printf("assign\n"); 
-                        sprintf($2->b,"%s",lookup($1)->reg); 
+                        sprintf($2->b,"%s",checkVar($1)->reg); 
                         $$ = $2; 
                     }
 ;
@@ -159,7 +158,7 @@ assign_part: T_ASSIGN exp
 			| T_ASSIGN T_NAME 
                 {    
                     $$ = opMaker("MOVQ","%rax",""); 
-                    addChild($$,opMaker("MOVQ",lookup($2)->reg,"%rax"));
+                    addChild($$,opMaker("MOVQ",checkVar($2)->reg,"%rax"));
                 }
 			| T_ASSIGN var_exp 
                 { 
@@ -250,6 +249,10 @@ compare:	exp cmp_tks exp
                     sprintf($$->extra1,"J%c%c",$2[0],$2[1]); 
                     sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  
                 }
+            | T_STRING cmp_tks var_exp					
+                { fprintf(stderr,"Can't compare string\n"); } 
+            | var_exp cmp_tks T_STRING					
+                { fprintf(stderr,"Can't compare string\n"); } 
 
             
 ;
@@ -266,7 +269,7 @@ var_exp: 	T_NAME
                 { 
                     char comment[50];
                     sprintf(comment,"%%rax\t# %s",$1);
-                    $$ = opMaker("MOVQ ",lookup($1)->reg,comment); 
+                    $$ = opMaker("MOVQ ",checkVar($1)->reg,comment); 
                 }
             | var_exp T_PLUS var_exp    
                 { 
@@ -395,9 +398,30 @@ var_exp: 	T_NAME
 			| T_MINUS T_NAME  %prec NEG 
                 { 
                     $$ =  opMaker("NEG","%rax",""); 		
-                    addChild($$,opMaker("MOVQ",lookup($2)->reg,"%rax"));	
+                    addChild($$,opMaker("MOVQ",checkVar($2)->reg,"%rax"));	
                 }	
+            | T_STRING T_PLUS var_exp					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+            | var_exp T_PLUS T_STRING					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+            | T_STRING T_MINUS var_exp					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+            | var_exp T_MINUS T_STRING					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+            | T_STRING T_MULTIPLY var_exp					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+            | var_exp T_MULTIPLY T_STRING					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+            | T_STRING T_DIVIDE var_exp					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+            | var_exp T_DIVIDE T_STRING					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+            | T_STRING T_MOD var_exp					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+            | var_exp T_MOD T_STRING					
+                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
             | T_LEFT var_exp T_RIGHT	{ $$ = $2; 	}
+            
 ;	
 
 ;
@@ -554,13 +578,13 @@ struct OP* printIntMaker(int value) {
 
 struct OP* printHexMaker(struct DATA* toPrint) {
 	struct OP* printOp = printMaker(toPrint);
-	sprintf(printOp->child[2]->a,"%s","$.FormatHex");
+	sprintf(printOp->child[1]->a,"%s","$.FormatHex");
 	return printOp;
 }
 
 struct OP* printIntHexMaker(int value) {
 	struct OP* printOp = printIntMaker(value);
-	sprintf(printOp->child[2]->a,"%s","$.FormatHex");
+	sprintf(printOp->child[1]->a,"%s","$.FormatHex");
 	return printOp;
 }
 
@@ -704,9 +728,9 @@ void printCode(struct OP* parent,int indent) {
 	for(i=0;i<parent->count;i++) {
 		printCode(parent->child[i],indent+1);
 	}
-	// for(i=0;i<indent;i++) {
-	// 	printf("\t");
-	// }
+	for(i=0;i<indent;i++) {
+		printf("\t");
+	}
 
 	if(strlen(parent->b)>0) { // 2-args op
 		printf("%s	%s, %s\n",parent->cmd,parent->a,parent->b); return;

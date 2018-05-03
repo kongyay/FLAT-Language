@@ -72,19 +72,18 @@ extern int yydebug;
     T_SPACE = 282,
     T_NEWLINE = 283,
     T_NAME = 284,
-    LOW = 285,
-    T_AND = 286,
-    T_OR = 287,
-    T_PLUS = 288,
-    T_MINUS = 289,
-    T_MULTIPLY = 290,
-    T_DIVIDE = 291,
-    T_MOD = 292,
-    T_NOT = 293,
-    T_LEFT = 294,
-    T_RIGHT = 295,
-    NEG = 296,
-    T_POW = 297
+    T_AND = 285,
+    T_OR = 286,
+    T_PLUS = 287,
+    T_MINUS = 288,
+    T_MULTIPLY = 289,
+    T_DIVIDE = 290,
+    T_MOD = 291,
+    T_NOT = 292,
+    T_LEFT = 293,
+    T_RIGHT = 294,
+    NEG = 295,
+    T_POW = 296
   };
 #endif
 
@@ -101,7 +100,7 @@ union YYSTYPE
   struct OP* op;
   struct DATA* data;
 
-#line 105 "grammar.tab.h" /* yacc.c:1909  */
+#line 104 "grammar.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
