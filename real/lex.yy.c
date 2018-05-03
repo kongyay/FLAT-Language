@@ -1073,7 +1073,7 @@ case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
 #line 67 "grammar.l"
-{return T_NEWLINE;}
+{}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
@@ -1088,7 +1088,7 @@ YY_RULE_SETUP
 case 46:
 YY_RULE_SETUP
 #line 70 "grammar.l"
-{ yyerror("Invalid character '%s'",yytext[0]); }
+{ yyerror("Invalid character \'%s\' ",yytext); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP

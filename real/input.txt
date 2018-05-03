@@ -5,11 +5,9 @@ int j
 int space = max - 1
 for i = 1, i = i+1, if i <= max : [
 
-    for j = 1, 
-    j = j+1, 
-    if j <= space : [
+    for j = 1, j = j+1, if j <= space : 
         print " "
-    ] end
+    end
 
     space = space-1
 

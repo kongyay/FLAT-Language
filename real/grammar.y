@@ -113,10 +113,10 @@ statements: { }
 ;
 
 statement: 
-      print_stm t_newlines		{ printf("Stm - print\n"); 		$$ = $1; }
-	| assign_stm t_newlines		{ printf("Stm - declare/assign\n"); 	$$ = $1;}
-    | if_stm t_newlines			{ printf("Stm - if\n"); 		$$ = $1;}
-	| for_stm t_newlines		{ printf("Stm - for\n"); 		$$ = $1;}
+      print_stm 		{ printf("Stm - print\n"); 		$$ = $1; }
+	| assign_stm 		{ printf("Stm - declare/assign\n"); 	$$ = $1;}
+    | if_stm 			{ printf("Stm - if\n"); 		$$ = $1;}
+	| for_stm 		    { printf("Stm - for\n"); 		$$ = $1;}
 	| block						{ printf("Stm - Block\n");		$$ = $1;}
 	
 ;
@@ -370,8 +370,6 @@ var_exp: 	T_NAME
             | T_LEFT var_exp T_RIGHT	{ $$ = $2; 	}
 ;	
 
-t_newlines: T_NEWLINE {}
-            | t_newlines T_NEWLINE {}
 ;
 
 exp: 		NUM						{ $$ = $1; 				}

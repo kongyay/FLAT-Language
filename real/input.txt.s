@@ -6,117 +6,117 @@
 	.string "%x\0"
 .NewLine:
 	.string "\12\0"
-.string22:
+.string23:
 	.string " \0"
-.string45:
+.string46:
 	.string "*\0"
-.string80:
+.string81:
 	.string " \0"
-.string106:
+.string107:
 	.string "*\0"
 .globl main
 main:
 	PUSHQ   %rbp
 
 	MOVQ	%rsp, %rbp
-	SUBQ	$48, %rsp
-	MOVL	%edi, -36(%rbp)
-	MOVQ	%rsi, -48(%rbp)
+	SUBQ	$64, %rsp
+	MOVL	%edi, -52(%rbp)
+	MOVQ	%rsi, -64(%rbp)
 	MOVQ	$10, -8(%rbp)
-	MOVQ	$0, -16(%rbp)
+	MOVQ	$20, -16(%rbp)
 	MOVQ	$0, -24(%rbp)
+	MOVQ	$0, -32(%rbp)
 			MOVQ 	-8(%rbp), %rax	# max
 		SUBQ	$1, %rax
-	MOVQ	%rax, -32(%rbp)
-		MOVQ	$1, -16(%rbp)
-		.startloop60:
+	MOVQ	%rax, -40(%rbp)
+		MOVQ	$1, -24(%rbp)
+		.startloop61:
 				MOVQ 	-8(%rbp), %rax	# max
 				MOVQ	%rax, %rbx
-				MOVQ 	-16(%rbp), %rax	# i
+				MOVQ 	-24(%rbp), %rax	# i
 			CMPQ	%rbx, %rax
-			JG 	.endif57
-					MOVQ	$1, -24(%rbp)
-					.startloop29:
-							MOVQ 	-32(%rbp), %rax	# space
+			JG 	.endif58
+					MOVQ	$1, -32(%rbp)
+					.startloop30:
+							MOVQ 	-40(%rbp), %rax	# space
 							MOVQ	%rax, %rbx
-							MOVQ 	-24(%rbp), %rax	# j
+							MOVQ 	-32(%rbp), %rax	# j
 						CMPQ	%rbx, %rax
-						JG 	.endif26
-								MOVL	$.string22, %edi
-								MOVL	$0, %eax
-							CALL	printf
-						
-								MOVQ 	-24(%rbp), %rax	# j
+						JG 	.endif27
+							MOVL	$.string23, %edi
+							MOVL	$0, %eax
+						CALL	printf
+								MOVQ 	-32(%rbp), %rax	# j
 							ADDQ	$1, %rax
-						MOVQ	%rax, -24(%rbp)
-						JMP	.startloop29
-					.endif26:
-				.endfor28:
-						MOVQ 	-32(%rbp), %rax	# space
+						MOVQ	%rax, -32(%rbp)
+						JMP	.startloop30
+					.endif27:
+				.endfor29:
+						MOVQ 	-40(%rbp), %rax	# space
 					SUBQ	$1, %rax
-				MOVQ	%rax, -32(%rbp)
-					MOVQ	$1, -24(%rbp)
-					.startloop52:
-									MOVQ 	-16(%rbp), %rax	# i
+				MOVQ	%rax, -40(%rbp)
+					MOVQ	$1, -32(%rbp)
+					.startloop53:
+									MOVQ 	-24(%rbp), %rax	# i
 									MOVQ	$2, %rbx
 								IMULQ	%rbx
 							SUBQ	$1, %rax
 							MOVQ	%rax, %rbx
-							MOVQ 	-24(%rbp), %rax	# j
+							MOVQ 	-32(%rbp), %rax	# j
 						CMPQ	%rbx, %rax
-						JG 	.endif49
-								MOVL	$.string45, %edi
+						JG 	.endif50
+								MOVL	$.string46, %edi
 								MOVL	$0, %eax
 							CALL	printf
 						
-								MOVQ 	-24(%rbp), %rax	# j
+								MOVQ 	-32(%rbp), %rax	# j
 							ADDQ	$1, %rax
-						MOVQ	%rax, -24(%rbp)
-						JMP	.startloop52
-					.endif49:
-				.endfor51:
+						MOVQ	%rax, -32(%rbp)
+						JMP	.startloop53
+					.endif50:
+				.endfor52:
 					MOVL	$.NewLine, %edi
 					MOVL	$0, %eax
 				CALL	printf
 			
-					MOVQ 	-16(%rbp), %rax	# i
+					MOVQ 	-24(%rbp), %rax	# i
 				ADDQ	$1, %rax
-			MOVQ	%rax, -16(%rbp)
-			JMP	.startloop60
-		.endif57:
-	.endfor59:
-	MOVQ	$1, -32(%rbp)
-		MOVQ	$1, -16(%rbp)
-		.startloop121:
+			MOVQ	%rax, -24(%rbp)
+			JMP	.startloop61
+		.endif58:
+	.endfor60:
+	MOVQ	$1, -40(%rbp)
+		MOVQ	$1, -24(%rbp)
+		.startloop122:
 					MOVQ 	-8(%rbp), %rax	# max
 				SUBQ	$1, %rax
 				MOVQ	%rax, %rbx
-				MOVQ 	-16(%rbp), %rax	# i
+				MOVQ 	-24(%rbp), %rax	# i
 			CMPQ	%rbx, %rax
-			JG 	.endif118
-					MOVQ	$1, -24(%rbp)
-					.startloop87:
-							MOVQ 	-32(%rbp), %rax	# space
+			JG 	.endif119
+					MOVQ	$1, -32(%rbp)
+					.startloop88:
+							MOVQ 	-40(%rbp), %rax	# space
 							MOVQ	%rax, %rbx
-							MOVQ 	-24(%rbp), %rax	# j
+							MOVQ 	-32(%rbp), %rax	# j
 						CMPQ	%rbx, %rax
-						JG 	.endif84
-								MOVL	$.string80, %edi
+						JG 	.endif85
+								MOVL	$.string81, %edi
 								MOVL	$0, %eax
 							CALL	printf
 						
-								MOVQ 	-24(%rbp), %rax	# j
+								MOVQ 	-32(%rbp), %rax	# j
 							ADDQ	$1, %rax
-						MOVQ	%rax, -24(%rbp)
-						JMP	.startloop87
-					.endif84:
-				.endfor86:
-						MOVQ 	-32(%rbp), %rax	# space
+						MOVQ	%rax, -32(%rbp)
+						JMP	.startloop88
+					.endif85:
+				.endfor87:
+						MOVQ 	-40(%rbp), %rax	# space
 					ADDQ	$1, %rax
-				MOVQ	%rax, -32(%rbp)
-					MOVQ	$1, -24(%rbp)
-					.startloop113:
-										MOVQ 	-16(%rbp), %rax	# i
+				MOVQ	%rax, -40(%rbp)
+					MOVQ	$1, -32(%rbp)
+					.startloop114:
+										MOVQ 	-24(%rbp), %rax	# i
 										MOVQ	%rax, %rbx
 										MOVQ 	-8(%rbp), %rax	# max
 									SUBQ	%rbx, %rax
@@ -124,29 +124,29 @@ main:
 								IMULQ	%rbx
 							SUBQ	$1, %rax
 							MOVQ	%rax, %rbx
-							MOVQ 	-24(%rbp), %rax	# j
+							MOVQ 	-32(%rbp), %rax	# j
 						CMPQ	%rbx, %rax
-						JG 	.endif110
-								MOVL	$.string106, %edi
+						JG 	.endif111
+								MOVL	$.string107, %edi
 								MOVL	$0, %eax
 							CALL	printf
 						
-								MOVQ 	-24(%rbp), %rax	# j
+								MOVQ 	-32(%rbp), %rax	# j
 							ADDQ	$1, %rax
-						MOVQ	%rax, -24(%rbp)
-						JMP	.startloop113
-					.endif110:
-				.endfor112:
+						MOVQ	%rax, -32(%rbp)
+						JMP	.startloop114
+					.endif111:
+				.endfor113:
 					MOVL	$.NewLine, %edi
 					MOVL	$0, %eax
 				CALL	printf
 			
-					MOVQ 	-16(%rbp), %rax	# i
+					MOVQ 	-24(%rbp), %rax	# i
 				ADDQ	$1, %rax
-			MOVQ	%rax, -16(%rbp)
-			JMP	.startloop121
-		.endif118:
-	.endfor120:
+			MOVQ	%rax, -24(%rbp)
+			JMP	.startloop122
+		.endif119:
+	.endfor121:
 
 MOVL	$0, %eax
 leave

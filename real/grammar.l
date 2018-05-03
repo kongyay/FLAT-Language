@@ -63,11 +63,10 @@ newline       		{return T_PRINTLN;}
 "("		            {return T_LEFT;}
 ")"		            {return T_RIGHT;}
 "("[ ]*")"		    {} //ignore empty char ( )
-^\n+                {} //ignore empty line ( )
-\n+		            {return T_NEWLINE;}
+\n+		            {}
 [\t\b\r\0 ]+              {}
 [A-Za-z]+[A-Za-z0-9]*              	{ yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
-.                   				{ yyerror("Invalid character '%s'",yytext[0]); }
+.                   				{ yyerror("Invalid character \'%s\' ",yytext); }
 %%
 int convHex(char* input) {
     char* p = input;
