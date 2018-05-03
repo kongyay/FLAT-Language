@@ -117,11 +117,12 @@ statement:
 	| assign_stm 		{ printf("Stm - declare/assign\n"); 	$$ = $1;}
     | if_stm 			{ printf("Stm - if\n"); 		$$ = $1;}
 	| for_stm 		    { printf("Stm - for\n"); 		$$ = $1;}
-	| block						{ printf("Stm - Block\n");		$$ = $1;}
+	| block				{ printf("Stm - Block\n");		$$ = $1;}
+    
 	
 ;
 
-print_stm: 	  T_PRINT exp 				{ $$ = printIntMaker($2); }
+print_stm: 	  T_PRINT exp 			    { $$ = printIntMaker($2); }
 			| T_PRINT T_NAME			{ $$ = printMaker(lookup($2)); }
             | T_PRINT var_exp			{ $$ = printVarExpMaker($2); }
 			| T_PRINT string			{ $$ = printMaker($2); }
@@ -257,7 +258,7 @@ compare:	exp cmp_tks exp
 
             
 ;
-cmp_tks:		T_EQ	{ $$ = "EQNE"; }
+cmp_tks:		T_EQ	{ $$ = "EQNE"; } 
 				| T_NE 	{ $$ = "NEEQ"; }
 				| T_GE 	{ $$ = "GEL "; }
 				| T_LE 	{ $$ = "LEG "; }
@@ -312,6 +313,22 @@ var_exp: 	T_NAME
                     
                     addChild($$,opMaker("","CQTO",""));		
                 }
+            | var_exp T_MOD var_exp			
+                { 
+                    // movq	-24(%rbp), %rax
+                    // cqto
+                    // idivq	-16(%rbp)
+                    // movq	%rax, -24(%rbp)
+                    $$ = opMaker("MOVQ","%rdx","%rax");
+                    addChild($$,$3);
+                    addChild($$,opMaker("MOVQ","%rax","%rbx")); 
+                    
+                    addChild($$,$1);
+                    
+                    addChild($$,opMaker("","CQTO",""));		
+                    addChild($$,opMaker("IDIVQ","%rbx","")); 
+                }
+
             | var_exp T_PLUS exp			
                 { 
                     $$ = opMaker("ADDQ",imm($3),"%rax");
@@ -335,6 +352,15 @@ var_exp: 	T_NAME
                     addChild($$,opMaker("MOVQ",imm($3),"%rbx"));
                     addChild($$,opMaker("","CQTO",""));		
                 }
+            | var_exp T_MOD exp			
+                { 
+                    $$ = opMaker("MOVQ","%rax","%rax");
+                    addChild($$,$1);
+                    addChild($$,opMaker("MOVQ",imm($3),"%rbx"));
+                    addChild($$,opMaker("IDIVQ","%rbx",""));	
+                    addChild($$,opMaker("","CQTO",""));	
+                }
+
 
             | exp T_PLUS var_exp			
                 { 
@@ -361,6 +387,15 @@ var_exp: 	T_NAME
                     addChild($$,opMaker("MOVQ","%rax","%rbx"));
                     addChild($$,opMaker("MOVQ",imm($1),"%rbx"));
                     addChild($$,opMaker("","CQTO",""));		
+                }
+            | exp T_MOD var_exp			
+                { 
+                    $$ = opMaker("MOVQ","%rdx","%rax");
+                    addChild($$,$3);
+                    addChild($$,opMaker("MOVQ","%rax","%rbx"));
+                    addChild($$,opMaker("MOVQ",imm($1),"%rbx"));
+                    addChild($$,opMaker("","CQTO",""));	
+                    addChild($$,opMaker("IDIVQ","%rbx",""));	
                 }
 			| T_MINUS T_NAME  %prec NEG 
                 { 
@@ -677,9 +712,9 @@ void printCode(struct OP* parent,int indent) {
 	for(i=0;i<parent->count;i++) {
 		printCode(parent->child[i],indent+1);
 	}
-	for(i=0;i<indent;i++) {
-		printf("\t");
-	}
+	// for(i=0;i<indent;i++) {
+	// 	printf("\t");
+	// }
 
 	if(strlen(parent->b)>0) { // 2-args op
 		printf("%s	%s, %s\n",parent->cmd,parent->a,parent->b); return;

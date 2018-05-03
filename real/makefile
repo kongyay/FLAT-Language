@@ -15,5 +15,6 @@ clean:
 	rm grammar grammar.tab.c lex.yy.c grammar.tab.h
 
 compile:
+	./grammar input.txt
 	gcc input.txt.s -o input.txt.o
 	./input.txt.o

@@ -16,8 +16,9 @@ main:
 	movq	$2, -16(%rbp)
 	movq	$0, -8(%rbp)
 	movq	-24(%rbp), %rax
-	imulq	-16(%rbp), %rax
-	movq	%rax, -24(%rbp)
+	cqto
+	idivq	-16(%rbp)
+	movq	%rdx, -24(%rbp)
 	movl	$0, %eax
 	popq	%rbp
 	.cfi_def_cfa 7, 8
