@@ -93,7 +93,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 58 "grammar.y" /* yacc.c:1909  */
+#line 64 "grammar.y" /* yacc.c:1909  */
               /* define stack type */
   int num;
   char c;

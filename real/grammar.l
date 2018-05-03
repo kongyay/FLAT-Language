@@ -13,7 +13,7 @@ void multComment();
 %}
 %%
 
-"#"[^\n]*           { singleComment(); }
+"#"[^\r\n]*           { singleComment(); }
 "/-"                { multComment(); }
 
 "0"[Xx][0-9]+ 	    { yylval.num = (int)strtol(yytext+2, NULL, 16); return NUM; }
@@ -38,28 +38,26 @@ void multComment();
 "^"		            {return T_POW;}
 "%"		            {return T_MOD;}
 
-
-
 "&&"		    {return T_AND;}
 "||"	        {return T_OR;}
 "!"		        {return T_NOT;}
 
 "|"		            {return T_VERT;}
-"["[\t\n ]+         {return T_Bracket_L;}
-"]"[\t\n ]+		    {return T_Bracket_R;}
-":"[\t\n ]+         {return T_COLON;}
-", "                {return T_COMMA;}
+"["[\t\r\n ]+         {return T_Bracket_L;}
+"]"[\t\r\n ]+		    {return T_Bracket_R;}
+":"[\t\r\n ]+         {return T_COLON;}
+","[\t\r\n ]+          {return T_COMMA;}
 "\""[^\"]*"\""		{yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 "\'"[^\']*"\'"    	{yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 
-"int"[\t ]+		        {return T_INT;}
-"if"[\t\n ]+            {return T_IF;}
-"end"           		{return T_END;}
-"else"[\t\n ]*          {return T_ELSE;}
-"for"[\t ]+             {return T_FOR;}
-"print"[\t ]*           {return T_PRINT;}
-"printh"[\t ]*          {return T_PRINTH;}
-"newline"       		{return T_PRINTLN;}
+int[\t ]+		        {return T_INT;}
+if[\t\r\n ]+            {return T_IF;}
+end           		{return T_END;}
+"else"[\t\r\n ]*          {return T_ELSE;}
+for[\t ]+             {return T_FOR;}
+print[\t ]*           {return T_PRINT;}
+printh[\t ]*          {return T_PRINTH;}
+newline       		{return T_PRINTLN;}
 
 
 "("		            {return T_LEFT;}
@@ -67,9 +65,9 @@ void multComment();
 "("[ ]*")"		    {} //ignore empty char ( )
 ^\n+                {} //ignore empty line ( )
 \n+		            {return T_NEWLINE;}
-[\t ]+              {}
+[\t\b\r\0 ]+              {}
 [A-Za-z]+[A-Za-z0-9]*              	{ yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
-.                   				{ yyerror("Invalid character"); }
+.                   				{ yyerror("Invalid character '%s'",yytext[0]); }
 %%
 int convHex(char* input) {
     char* p = input;
@@ -97,3 +95,4 @@ void multComment() {
 		}
 	}	
 }
+

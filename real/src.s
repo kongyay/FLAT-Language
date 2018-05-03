@@ -1,58 +1,29 @@
-.FormatStr:
-        .string "%s\0"
-.FormatInt:
-        .string "%ld\0"
-.FormatHex:
-        .string "%x\0"
-.NewLine:
-        .string "\12\0"
-.string18:
-        .string " \0"
-.globl main
+	.file	"src.c"
+	.text
+	.globl	main
+	.type	main, @function
 main:
-        PUSHQ   %rbp
-
-        MOVQ    %rsp, %rbp
-        SUBQ    $32, %rsp
-        MOVL    %edi, -20(%rbp)
-        MOVQ    %rsi, -32(%rbp)
-        MOVQ    $0, -8(%rbp)
-        MOVQ    $0, -16(%rbp)
-                MOVQ    $16, -8(%rbp)
-                .startloop33:
-                        CMPQ    $50, -8(%rbp)
-                        JGE     .endif30
-                                        MOVQ    $0, -16(%rbp)
-                                        .startloop25:
-                                                        MOVQ    -16(%rbp), %rax
-                                                CMPQ    -8(%rbp), %rax
-                                                JG      .endif22
-                                                                MOVQ    -16(%rbp), %rax
-                                                                MOVQ    %rax, %rsi
-                                                                MOVL    $.FormatHex, %edi
-                                                                MOVL    $0, %eax
-                                                        CALL    printf
-                                                                MOVL    $.string18, %edi
-                                                                MOVL    $0, %eax
-                                                        CALL    printf
-
-                                                        ADDQ    $1, -16(%rbp)
-                                                        MOVQ    -16(%rbp), %rax
-                                                MOVQ    %rax, -16(%rbp)
-                                                JMP     .startloop25
-                                        .endif22:
-                                .endfor24:
-                                        MOVL    $.NewLine, %edi
-                                        MOVL    $0, %eax
-                                CALL    printf
-
-                                ADDQ    $1, -8(%rbp)
-                                MOVQ    -8(%rbp), %rax
-                        MOVQ    %rax, -8(%rbp)
-                        JMP     .startloop33
-                .endif30:
-        .endfor32:
-
-MOVL    $0, %eax
-leave
-ret
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -36(%rbp)
+	movq	%rsi, -48(%rbp)
+	movq	$10, -24(%rbp)
+	movq	$2, -16(%rbp)
+	movq	$0, -8(%rbp)
+	movq	-24(%rbp), %rax
+	imulq	-16(%rbp), %rax
+	movq	%rax, -24(%rbp)
+	movl	$0, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609"
+	.section	.note.GNU-stack,"",@progbits
