@@ -564,11 +564,10 @@ char *yytext;
 #define YY_DECL int yylex()
 
 #include "grammar.tab.h"
-extern void yyerror(const char* s,...);
 int convHex(char* input);
 void singleComment();
 void multComment();
-#line 572 "lex.yy.c"
+#line 571 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -786,10 +785,10 @@ YY_DECL
 		}
 
 	{
-#line 14 "grammar.l"
+#line 13 "grammar.l"
 
 
-#line 793 "lex.yy.c"
+#line 792 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -848,244 +847,244 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 16 "grammar.l"
+#line 15 "grammar.l"
 { singleComment(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 17 "grammar.l"
+#line 16 "grammar.l"
 { multComment(); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 19 "grammar.l"
+#line 18 "grammar.l"
 { yylval.num = (int)strtol(yytext+2, NULL, 16); return NUM; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 20 "grammar.l"
+#line 19 "grammar.l"
 { yylval.num = atoi(yytext); return NUM; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 21 "grammar.l"
-{ yylval.num = (int)atof(yytext); yyerror("Float/Double are not supported. (Floored to int)"); return NUM;}
+#line 20 "grammar.l"
+{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 22 "grammar.l"
-{ yylval.num = (int)atof(yytext); yyerror("Float/Double are not supported. (Floored to int)"); return NUM;}
+#line 21 "grammar.l"
+{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 25 "grammar.l"
+#line 24 "grammar.l"
 {return T_INC;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 26 "grammar.l"
+#line 25 "grammar.l"
 {return T_GE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 27 "grammar.l"
+#line 26 "grammar.l"
 {return T_LE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 28 "grammar.l"
+#line 27 "grammar.l"
 {return T_EQ;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 29 "grammar.l"
+#line 28 "grammar.l"
 {return T_G;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 30 "grammar.l"
+#line 29 "grammar.l"
 {return T_L;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 31 "grammar.l"
+#line 30 "grammar.l"
 {return T_NE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 32 "grammar.l"
+#line 31 "grammar.l"
 {return T_ASSIGN;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 34 "grammar.l"
+#line 33 "grammar.l"
 {return T_PLUS;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 35 "grammar.l"
+#line 34 "grammar.l"
 {return T_MINUS;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 36 "grammar.l"
+#line 35 "grammar.l"
 {return T_MULTIPLY;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 37 "grammar.l"
+#line 36 "grammar.l"
 {return T_DIVIDE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 38 "grammar.l"
+#line 37 "grammar.l"
 {return T_POW;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 39 "grammar.l"
+#line 38 "grammar.l"
 {return T_MOD;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 41 "grammar.l"
+#line 40 "grammar.l"
 {return T_AND;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 42 "grammar.l"
+#line 41 "grammar.l"
 {return T_OR;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 43 "grammar.l"
+#line 42 "grammar.l"
 {return T_NOT;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 45 "grammar.l"
+#line 44 "grammar.l"
 {return T_VERT;}
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 46 "grammar.l"
+#line 45 "grammar.l"
 {return T_Bracket_L;}
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */
 YY_RULE_SETUP
-#line 47 "grammar.l"
+#line 46 "grammar.l"
 {return T_Bracket_R;}
 	YY_BREAK
 case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
-#line 48 "grammar.l"
+#line 47 "grammar.l"
 {return T_COLON;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 49 "grammar.l"
+#line 48 "grammar.l"
 {return T_COMMA;}
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 50 "grammar.l"
+#line 49 "grammar.l"
 {yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 51 "grammar.l"
+#line 50 "grammar.l"
 {yylval.str=malloc(yyleng); yytext++; yytext[strlen(yytext)-1] = 0; sprintf(yylval.str,"%s",yytext); return T_STRING; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 53 "grammar.l"
+#line 52 "grammar.l"
 {return T_INT;}
 	YY_BREAK
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 54 "grammar.l"
+#line 53 "grammar.l"
 {return T_IF;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 55 "grammar.l"
+#line 54 "grammar.l"
 {return T_END;}
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 56 "grammar.l"
+#line 55 "grammar.l"
 {return T_ELSE;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 57 "grammar.l"
+#line 56 "grammar.l"
 {return T_FOR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 58 "grammar.l"
+#line 57 "grammar.l"
 {return T_PRINT;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 59 "grammar.l"
+#line 58 "grammar.l"
 {return T_PRINTH;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 60 "grammar.l"
+#line 59 "grammar.l"
 {return T_PRINTLN;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 63 "grammar.l"
+#line 62 "grammar.l"
 {return T_LEFT;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 64 "grammar.l"
+#line 63 "grammar.l"
 {return T_RIGHT;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 65 "grammar.l"
+#line 64 "grammar.l"
 {} //ignore empty char ( )
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 66 "grammar.l"
+#line 65 "grammar.l"
 {}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 67 "grammar.l"
+#line 66 "grammar.l"
 {}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 68 "grammar.l"
+#line 67 "grammar.l"
 { yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 69 "grammar.l"
-{ yyerror("Invalid character \'%s\' ",yytext); }
+#line 68 "grammar.l"
+{ fprintf(stderr,"Invalid character \'%s\' ",yytext); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 70 "grammar.l"
+#line 69 "grammar.l"
 ECHO;
 	YY_BREAK
-#line 1089 "lex.yy.c"
+#line 1088 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2086,7 +2085,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 70 "grammar.l"
+#line 69 "grammar.l"
 
 
 int convHex(char* input) {

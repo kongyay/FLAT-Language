@@ -105,11 +105,6 @@ struct OP* printHexMaker(struct DATA* toPrint);
 struct OP* printIntHexMaker(int value);
 struct OP* printVarExpMaker(struct OP* varExp);
 
-
-
-struct DATA *lookup(char *s);
-
-void checkVar(char *name,int mode);
 struct DATA* addVar(char *name, char *value);
 struct DATA* addString(char* value);
 struct DATA* addInt(char* varName);
@@ -118,6 +113,7 @@ void printProgram();
 void printCode(struct OP* printCode,int indent);
 unsigned hashfn(char *s);
 struct DATA *lookup(char *s);
+struct DATA *checkVar(char *s);
 char* imm(int d);
 void showToken();
 
@@ -125,7 +121,7 @@ void showToken();
 
 
 
-#line 129 "grammar.tab.c" /* yacc.c:339  */
+#line 125 "grammar.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -208,7 +204,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 64 "grammar.y" /* yacc.c:355  */
+#line 60 "grammar.y" /* yacc.c:355  */
               /* define stack type */
   int num;
   char c;
@@ -216,7 +212,7 @@ union YYSTYPE
   struct OP* op;
   struct DATA* data;
 
-#line 220 "grammar.tab.c" /* yacc.c:355  */
+#line 216 "grammar.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -233,7 +229,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 237 "grammar.tab.c" /* yacc.c:358  */
+#line 233 "grammar.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -534,14 +530,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   108,   108,   110,   111,   112,   116,   117,   118,   119,
-     120,   125,   126,   127,   128,   129,   130,   131,   132,   135,
-     146,   151,   159,   163,   169,   177,   182,   189,   197,   199,
-     203,   209,   214,   223,   231,   239,   247,   261,   262,   263,
-     264,   265,   266,   270,   276,   283,   290,   302,   316,   332,
-     337,   342,   348,   355,   365,   370,   377,   383,   391,   400,
-     405,   410,   411,   412,   413,   414,   415,   416,   417,   418,
-     419,   420
+       0,   104,   104,   106,   107,   108,   112,   113,   114,   115,
+     116,   121,   122,   123,   124,   125,   126,   127,   128,   131,
+     142,   147,   155,   159,   164,   172,   177,   184,   192,   194,
+     198,   204,   209,   218,   226,   234,   242,   256,   257,   258,
+     259,   260,   261,   265,   271,   278,   285,   297,   311,   327,
+     332,   337,   343,   350,   360,   365,   372,   378,   386,   395,
+     400,   405,   406,   407,   408,   409,   410,   411,   412,   413,
+     414,   415
 };
 #endif
 
@@ -1426,111 +1422,111 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 108 "grammar.y" /* yacc.c:1646  */
-    { printf("REACHED\n\n\n"); printProgram((yyvsp[0].op)); }
-#line 1432 "grammar.tab.c" /* yacc.c:1646  */
+#line 104 "grammar.y" /* yacc.c:1646  */
+    { printf("Compiled... :)\n\n\n"); printProgram((yyvsp[0].op)); }
+#line 1428 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 110 "grammar.y" /* yacc.c:1646  */
+#line 106 "grammar.y" /* yacc.c:1646  */
     { }
-#line 1438 "grammar.tab.c" /* yacc.c:1646  */
+#line 1434 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 111 "grammar.y" /* yacc.c:1646  */
+#line 107 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = (struct OP*)malloc(sizeof(struct OP)); addChild((yyval.op),(yyvsp[0].op)); }
-#line 1444 "grammar.tab.c" /* yacc.c:1646  */
+#line 1440 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 112 "grammar.y" /* yacc.c:1646  */
+#line 108 "grammar.y" /* yacc.c:1646  */
     {  (yyval.op) = (yyvsp[-1].op); addChild((yyval.op),(yyvsp[0].op)); }
-#line 1450 "grammar.tab.c" /* yacc.c:1646  */
+#line 1446 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 116 "grammar.y" /* yacc.c:1646  */
+#line 112 "grammar.y" /* yacc.c:1646  */
     { printf("Stm - print\n"); 		(yyval.op) = (yyvsp[0].op); }
-#line 1456 "grammar.tab.c" /* yacc.c:1646  */
+#line 1452 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 117 "grammar.y" /* yacc.c:1646  */
+#line 113 "grammar.y" /* yacc.c:1646  */
     { printf("Stm - declare/assign\n"); 	(yyval.op) = (yyvsp[0].op);}
-#line 1462 "grammar.tab.c" /* yacc.c:1646  */
+#line 1458 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 118 "grammar.y" /* yacc.c:1646  */
+#line 114 "grammar.y" /* yacc.c:1646  */
     { printf("Stm - if\n"); 		(yyval.op) = (yyvsp[0].op);}
-#line 1468 "grammar.tab.c" /* yacc.c:1646  */
+#line 1464 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 119 "grammar.y" /* yacc.c:1646  */
+#line 115 "grammar.y" /* yacc.c:1646  */
     { printf("Stm - for\n"); 		(yyval.op) = (yyvsp[0].op);}
-#line 1474 "grammar.tab.c" /* yacc.c:1646  */
+#line 1470 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 120 "grammar.y" /* yacc.c:1646  */
+#line 116 "grammar.y" /* yacc.c:1646  */
     { printf("Stm - Block\n");		(yyval.op) = (yyvsp[0].op);}
-#line 1480 "grammar.tab.c" /* yacc.c:1646  */
+#line 1476 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 125 "grammar.y" /* yacc.c:1646  */
+#line 121 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = printIntMaker((yyvsp[0].num)); }
-#line 1486 "grammar.tab.c" /* yacc.c:1646  */
+#line 1482 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 126 "grammar.y" /* yacc.c:1646  */
-    { (yyval.op) = printMaker(lookup((yyvsp[0].str))); }
-#line 1492 "grammar.tab.c" /* yacc.c:1646  */
+#line 122 "grammar.y" /* yacc.c:1646  */
+    { (yyval.op) = printMaker(checkVar((yyvsp[0].str))); }
+#line 1488 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 127 "grammar.y" /* yacc.c:1646  */
+#line 123 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = printVarExpMaker((yyvsp[0].op)); }
-#line 1498 "grammar.tab.c" /* yacc.c:1646  */
+#line 1494 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 128 "grammar.y" /* yacc.c:1646  */
+#line 124 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = printMaker((yyvsp[0].data)); }
-#line 1504 "grammar.tab.c" /* yacc.c:1646  */
+#line 1500 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 129 "grammar.y" /* yacc.c:1646  */
+#line 125 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = printIntHexMaker((yyvsp[0].num)); }
-#line 1510 "grammar.tab.c" /* yacc.c:1646  */
+#line 1506 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 130 "grammar.y" /* yacc.c:1646  */
-    { (yyval.op) = printHexMaker(lookup((yyvsp[0].str))); }
-#line 1516 "grammar.tab.c" /* yacc.c:1646  */
+#line 126 "grammar.y" /* yacc.c:1646  */
+    { (yyval.op) = printHexMaker(checkVar((yyvsp[0].str))); }
+#line 1512 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 131 "grammar.y" /* yacc.c:1646  */
-    { (yyval.op) = NULL; yyerror("Can't print string as hex"); }
-#line 1522 "grammar.tab.c" /* yacc.c:1646  */
+#line 127 "grammar.y" /* yacc.c:1646  */
+    { (yyval.op) = NULL; fprintf(stderr,"Can't print string as hex"); }
+#line 1518 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 132 "grammar.y" /* yacc.c:1646  */
-    { (yyval.op) = printMaker(lookup(".NewLine")); }
-#line 1528 "grammar.tab.c" /* yacc.c:1646  */
+#line 128 "grammar.y" /* yacc.c:1646  */
+    { (yyval.op) = printMaker(checkVar(".NewLine")); }
+#line 1524 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 136 "grammar.y" /* yacc.c:1646  */
+#line 132 "grammar.y" /* yacc.c:1646  */
     { 
-                        printf("declare+assign\n"); 
+                        //printf("declare+assign\n"); 
                         if(strcmp((yyvsp[0].op)->b,(yyvsp[-1].str))==0) {
                             (yyval.op) = NULL;
                         } else {
@@ -1539,164 +1535,163 @@ yyreduce:
                         }
                         
                     }
-#line 1543 "grammar.tab.c" /* yacc.c:1646  */
+#line 1539 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 147 "grammar.y" /* yacc.c:1646  */
+#line 143 "grammar.y" /* yacc.c:1646  */
     { 
-                        printf("declare\n"); 
+                        //printf("declare\n"); 
                         (yyval.op) = opMaker("MOVQ","$0",addInt((yyvsp[0].str))->reg); 
                     }
-#line 1552 "grammar.tab.c" /* yacc.c:1646  */
+#line 1548 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 152 "grammar.y" /* yacc.c:1646  */
+#line 148 "grammar.y" /* yacc.c:1646  */
     { 
-                        printf("assign\n"); 
+                        //printf("assign\n"); 
                         sprintf((yyvsp[0].op)->b,"%s",lookup((yyvsp[-1].str))->reg); 
                         (yyval.op) = (yyvsp[0].op); 
                     }
-#line 1562 "grammar.tab.c" /* yacc.c:1646  */
+#line 1558 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 160 "grammar.y" /* yacc.c:1646  */
+#line 156 "grammar.y" /* yacc.c:1646  */
     {   
                     (yyval.op) = opMaker("MOVQ",imm((yyvsp[0].num)),""); 
                 }
-#line 1570 "grammar.tab.c" /* yacc.c:1646  */
+#line 1566 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 164 "grammar.y" /* yacc.c:1646  */
-    {   
-                    checkVar((yyvsp[0].str),1); 
+#line 160 "grammar.y" /* yacc.c:1646  */
+    {    
                     (yyval.op) = opMaker("MOVQ","%rax",""); 
                     addChild((yyval.op),opMaker("MOVQ",lookup((yyvsp[0].str))->reg,"%rax"));
                 }
-#line 1580 "grammar.tab.c" /* yacc.c:1646  */
+#line 1575 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 170 "grammar.y" /* yacc.c:1646  */
+#line 165 "grammar.y" /* yacc.c:1646  */
     { 
                     
                     (yyval.op) = opMaker("MOVQ","%rax",""); 
                     addChild((yyval.op),(yyvsp[0].op)); 
                 }
-#line 1590 "grammar.tab.c" /* yacc.c:1646  */
+#line 1585 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 178 "grammar.y" /* yacc.c:1646  */
+#line 173 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("if\n"); 
+                    //printf("if\n"); 
                     (yyval.op) = ifMaker((yyvsp[-3].op),(yyvsp[-1].op));
                 }
-#line 1599 "grammar.tab.c" /* yacc.c:1646  */
+#line 1594 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 183 "grammar.y" /* yacc.c:1646  */
+#line 178 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("ifElse\n"); 
+                    //printf("ifElse\n"); 
                     (yyval.op) = ifElseMaker((yyvsp[-6].op),(yyvsp[-4].op),(yyvsp[-1].op)); 
                 }
-#line 1608 "grammar.tab.c" /* yacc.c:1646  */
+#line 1603 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 190 "grammar.y" /* yacc.c:1646  */
+#line 185 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("for\n"); 
+                    //printf("for\n"); 
                     (yyval.op) = forMaker((yyvsp[-4].op),(yyvsp[-2].op),(yyvsp[0].op));  
                 }
-#line 1617 "grammar.tab.c" /* yacc.c:1646  */
+#line 1612 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 197 "grammar.y" /* yacc.c:1646  */
+#line 192 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = (yyvsp[-1].op); }
-#line 1623 "grammar.tab.c" /* yacc.c:1646  */
+#line 1618 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 200 "grammar.y" /* yacc.c:1646  */
+#line 195 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.data) = addString((yyvsp[0].str));   
                 }
-#line 1631 "grammar.tab.c" /* yacc.c:1646  */
+#line 1626 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 204 "grammar.y" /* yacc.c:1646  */
+#line 199 "grammar.y" /* yacc.c:1646  */
     { 
                     char x[strlen((yyvsp[0].str))+10]; 
                     sprintf(x,"%d%s",(yyvsp[-2].num),(yyvsp[0].str)); 
                     (yyval.data) = addString(x); 
                 }
-#line 1641 "grammar.tab.c" /* yacc.c:1646  */
+#line 1636 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 210 "grammar.y" /* yacc.c:1646  */
+#line 205 "grammar.y" /* yacc.c:1646  */
     { 
                     char x[strlen((yyvsp[-2].str))+10]; 
                     sprintf(x,"%s%d",(yyvsp[-2].str),(yyvsp[0].num)); (yyval.data) = addString(x); 	
                 }
-#line 1650 "grammar.tab.c" /* yacc.c:1646  */
+#line 1645 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 215 "grammar.y" /* yacc.c:1646  */
+#line 210 "grammar.y" /* yacc.c:1646  */
     { 
                     char x[strlen((yyvsp[0].str))+strlen((yyvsp[-2].str))+1]; 
                     sprintf(x,"%s%s",(yyvsp[-2].str),(yyvsp[0].str)); (yyval.data) = addString(x); 	
                 }
-#line 1659 "grammar.tab.c" /* yacc.c:1646  */
+#line 1654 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 224 "grammar.y" /* yacc.c:1646  */
+#line 219 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("cmp %d %d\n",(yyvsp[-2].num),(yyvsp[0].num));
+                    //printf("cmp %d %d\n",$1,$3);
                     (yyval.op) = opMaker("CMPQ",imm((yyvsp[0].num)),imm((yyvsp[-2].num)));   
                     sprintf((yyval.op)->extra1,"J%c%c",(yyvsp[-1].str)[0],(yyvsp[-1].str)[1]); 
                     sprintf((yyval.op)->extra2,"J%c%c",(yyvsp[-1].str)[2],(yyvsp[-1].str)[3]);  
                 }
-#line 1670 "grammar.tab.c" /* yacc.c:1646  */
+#line 1665 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 232 "grammar.y" /* yacc.c:1646  */
+#line 227 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("cmp %d\n",(yyvsp[0].num));
+                    //printf("cmp %d\n",$3);
                     (yyval.op) = opMaker("CMPQ",imm((yyvsp[0].num)),"%rax"); 	 	
                     addChild((yyval.op),(yyvsp[-2].op));
                     sprintf((yyval.op)->extra1,"J%c%c",(yyvsp[-1].str)[0],(yyvsp[-1].str)[1]); 
                     sprintf((yyval.op)->extra2,"J%c%c",(yyvsp[-1].str)[2],(yyvsp[-1].str)[3]); 
                 }
-#line 1682 "grammar.tab.c" /* yacc.c:1646  */
+#line 1677 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 240 "grammar.y" /* yacc.c:1646  */
+#line 235 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("cmp %d\n",(yyvsp[-2].num));
+                    //printf("cmp %d\n",$1);
                     (yyval.op) = opMaker("CMPQ","%rax",imm((yyvsp[-2].num))); 
                     addChild((yyval.op),(yyvsp[0].op));	
                     sprintf((yyval.op)->extra1,"J%c%c",(yyvsp[-1].str)[0],(yyvsp[-1].str)[1]); 
                     sprintf((yyval.op)->extra2,"J%c%c",(yyvsp[-1].str)[2],(yyvsp[-1].str)[3]);  
                 }
-#line 1694 "grammar.tab.c" /* yacc.c:1646  */
+#line 1689 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 248 "grammar.y" /* yacc.c:1646  */
+#line 243 "grammar.y" /* yacc.c:1646  */
     { 
-                    printf("cmp\n");
+                    //printf("cmp\n");
                     (yyval.op) = opMaker("CMPQ","%rbx","%rax");   
                     addChild((yyval.op),(yyvsp[0].op));
                     addChild((yyval.op),opMaker("MOVQ","%rax","%rbx"));
@@ -1705,79 +1700,79 @@ yyreduce:
                     sprintf((yyval.op)->extra1,"J%c%c",(yyvsp[-1].str)[0],(yyvsp[-1].str)[1]); 
                     sprintf((yyval.op)->extra2,"J%c%c",(yyvsp[-1].str)[2],(yyvsp[-1].str)[3]);  
                 }
-#line 1709 "grammar.tab.c" /* yacc.c:1646  */
+#line 1704 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 261 "grammar.y" /* yacc.c:1646  */
+#line 256 "grammar.y" /* yacc.c:1646  */
     { (yyval.str) = "EQNE"; }
-#line 1715 "grammar.tab.c" /* yacc.c:1646  */
+#line 1710 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 262 "grammar.y" /* yacc.c:1646  */
+#line 257 "grammar.y" /* yacc.c:1646  */
     { (yyval.str) = "NEEQ"; }
-#line 1721 "grammar.tab.c" /* yacc.c:1646  */
+#line 1716 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 263 "grammar.y" /* yacc.c:1646  */
+#line 258 "grammar.y" /* yacc.c:1646  */
     { (yyval.str) = "GEL "; }
-#line 1727 "grammar.tab.c" /* yacc.c:1646  */
+#line 1722 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 264 "grammar.y" /* yacc.c:1646  */
+#line 259 "grammar.y" /* yacc.c:1646  */
     { (yyval.str) = "LEG "; }
-#line 1733 "grammar.tab.c" /* yacc.c:1646  */
+#line 1728 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 265 "grammar.y" /* yacc.c:1646  */
+#line 260 "grammar.y" /* yacc.c:1646  */
     { (yyval.str) = "G LE"; }
-#line 1739 "grammar.tab.c" /* yacc.c:1646  */
+#line 1734 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 266 "grammar.y" /* yacc.c:1646  */
+#line 261 "grammar.y" /* yacc.c:1646  */
     { (yyval.str) = "L GE"; }
-#line 1745 "grammar.tab.c" /* yacc.c:1646  */
+#line 1740 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 271 "grammar.y" /* yacc.c:1646  */
+#line 266 "grammar.y" /* yacc.c:1646  */
     { 
                     char comment[50];
                     sprintf(comment,"%%rax\t# %s",(yyvsp[0].str));
                     (yyval.op) = opMaker("MOVQ ",lookup((yyvsp[0].str))->reg,comment); 
                 }
-#line 1755 "grammar.tab.c" /* yacc.c:1646  */
+#line 1750 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 277 "grammar.y" /* yacc.c:1646  */
+#line 272 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("ADDQ","%rbx","%rax"); 
                     addChild((yyval.op),(yyvsp[0].op)); 
                     addChild((yyval.op),opMaker("MOVQ","%rax","%rbx")); 
                     addChild((yyval.op),(yyvsp[-2].op)); 
                 }
-#line 1766 "grammar.tab.c" /* yacc.c:1646  */
+#line 1761 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 284 "grammar.y" /* yacc.c:1646  */
+#line 279 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("SUBQ","%rbx","%rax"); 
                     addChild((yyval.op),(yyvsp[0].op)); 
                     addChild((yyval.op),opMaker("MOVQ","%rax","%rbx")); 
                     addChild((yyval.op),(yyvsp[-2].op)); 
                 }
-#line 1777 "grammar.tab.c" /* yacc.c:1646  */
+#line 1772 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 291 "grammar.y" /* yacc.c:1646  */
+#line 286 "grammar.y" /* yacc.c:1646  */
     { 
                     // movq	-24(%rbp), %rax
                     // cqto
@@ -1789,11 +1784,11 @@ yyreduce:
                     
                     addChild((yyval.op),(yyvsp[-2].op));
                 }
-#line 1793 "grammar.tab.c" /* yacc.c:1646  */
+#line 1788 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 303 "grammar.y" /* yacc.c:1646  */
+#line 298 "grammar.y" /* yacc.c:1646  */
     { 
                     // movq	-24(%rbp), %rax
                     // cqto
@@ -1807,11 +1802,11 @@ yyreduce:
                     
                     addChild((yyval.op),opMaker("","CQTO",""));		
                 }
-#line 1811 "grammar.tab.c" /* yacc.c:1646  */
+#line 1806 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 317 "grammar.y" /* yacc.c:1646  */
+#line 312 "grammar.y" /* yacc.c:1646  */
     { 
                     // movq	-24(%rbp), %rax
                     // cqto
@@ -1826,50 +1821,50 @@ yyreduce:
                     addChild((yyval.op),opMaker("","CQTO",""));		
                     addChild((yyval.op),opMaker("IDIVQ","%rbx","")); 
                 }
-#line 1830 "grammar.tab.c" /* yacc.c:1646  */
+#line 1825 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 333 "grammar.y" /* yacc.c:1646  */
+#line 328 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("ADDQ",imm((yyvsp[0].num)),"%rax");
                     addChild((yyval.op),(yyvsp[-2].op));		
                 }
-#line 1839 "grammar.tab.c" /* yacc.c:1646  */
+#line 1834 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 338 "grammar.y" /* yacc.c:1646  */
+#line 333 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("SUBQ",imm((yyvsp[0].num)),"%rax");
                     addChild((yyval.op),(yyvsp[-2].op));		
                 }
-#line 1848 "grammar.tab.c" /* yacc.c:1646  */
+#line 1843 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 343 "grammar.y" /* yacc.c:1646  */
+#line 338 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("IMULQ","%rbx","");
                     addChild((yyval.op),(yyvsp[-2].op));
                     addChild((yyval.op),opMaker("MOVQ",imm((yyvsp[0].num)),"%rbx"));	
                 }
-#line 1858 "grammar.tab.c" /* yacc.c:1646  */
+#line 1853 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 349 "grammar.y" /* yacc.c:1646  */
+#line 344 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("IDIVQ","%rbx","");
                     addChild((yyval.op),(yyvsp[-2].op));
                     addChild((yyval.op),opMaker("MOVQ",imm((yyvsp[0].num)),"%rbx"));
                     addChild((yyval.op),opMaker("","CQTO",""));		
                 }
-#line 1869 "grammar.tab.c" /* yacc.c:1646  */
+#line 1864 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 356 "grammar.y" /* yacc.c:1646  */
+#line 351 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("MOVQ","%rax","%rax");
                     addChild((yyval.op),(yyvsp[-2].op));
@@ -1877,41 +1872,41 @@ yyreduce:
                     addChild((yyval.op),opMaker("IDIVQ","%rbx",""));	
                     addChild((yyval.op),opMaker("","CQTO",""));	
                 }
-#line 1881 "grammar.tab.c" /* yacc.c:1646  */
+#line 1876 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 366 "grammar.y" /* yacc.c:1646  */
+#line 361 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("ADDQ",imm((yyvsp[-2].num)),"%rax");
                     addChild((yyval.op),(yyvsp[0].op));		
                 }
-#line 1890 "grammar.tab.c" /* yacc.c:1646  */
+#line 1885 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 371 "grammar.y" /* yacc.c:1646  */
+#line 366 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("SUBQ","%rbx","%rax");
                     addChild((yyval.op),(yyvsp[0].op));		
                     addChild((yyval.op),opMaker("MOVQ","%rax","%rbx"));	
                     addChild((yyval.op),opMaker("MOVQ",imm((yyvsp[-2].num)),"%rax"));
                 }
-#line 1901 "grammar.tab.c" /* yacc.c:1646  */
+#line 1896 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 378 "grammar.y" /* yacc.c:1646  */
+#line 373 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("IMULQ","%rbx","");
                     addChild((yyval.op),(yyvsp[0].op));
                     addChild((yyval.op),opMaker("MOVQ",imm((yyvsp[-2].num)),"%rbx"));	
                 }
-#line 1911 "grammar.tab.c" /* yacc.c:1646  */
+#line 1906 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 384 "grammar.y" /* yacc.c:1646  */
+#line 379 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("IDIVQ","%rbx","");
                     addChild((yyval.op),(yyvsp[0].op));
@@ -1919,11 +1914,11 @@ yyreduce:
                     addChild((yyval.op),opMaker("MOVQ",imm((yyvsp[-2].num)),"%rbx"));
                     addChild((yyval.op),opMaker("","CQTO",""));		
                 }
-#line 1923 "grammar.tab.c" /* yacc.c:1646  */
+#line 1918 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 392 "grammar.y" /* yacc.c:1646  */
+#line 387 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) = opMaker("MOVQ","%rdx","%rax");
                     addChild((yyval.op),(yyvsp[0].op));
@@ -1932,92 +1927,92 @@ yyreduce:
                     addChild((yyval.op),opMaker("","CQTO",""));	
                     addChild((yyval.op),opMaker("IDIVQ","%rbx",""));	
                 }
-#line 1936 "grammar.tab.c" /* yacc.c:1646  */
+#line 1931 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 401 "grammar.y" /* yacc.c:1646  */
+#line 396 "grammar.y" /* yacc.c:1646  */
     { 
                     (yyval.op) =  opMaker("NEG","%rax",""); 		
                     addChild((yyval.op),opMaker("MOVQ",lookup((yyvsp[0].str))->reg,"%rax"));	
                 }
-#line 1945 "grammar.tab.c" /* yacc.c:1646  */
+#line 1940 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 405 "grammar.y" /* yacc.c:1646  */
+#line 400 "grammar.y" /* yacc.c:1646  */
     { (yyval.op) = (yyvsp[-1].op); 	}
-#line 1951 "grammar.tab.c" /* yacc.c:1646  */
+#line 1946 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 410 "grammar.y" /* yacc.c:1646  */
+#line 405 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = (yyvsp[0].num); 				}
-#line 1957 "grammar.tab.c" /* yacc.c:1646  */
+#line 1952 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 411 "grammar.y" /* yacc.c:1646  */
+#line 406 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = (yyvsp[0].num); 				}
-#line 1963 "grammar.tab.c" /* yacc.c:1646  */
+#line 1958 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 412 "grammar.y" /* yacc.c:1646  */
+#line 407 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num); 		}
-#line 1969 "grammar.tab.c" /* yacc.c:1646  */
+#line 1964 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 413 "grammar.y" /* yacc.c:1646  */
+#line 408 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num); 		}
-#line 1975 "grammar.tab.c" /* yacc.c:1646  */
+#line 1970 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 414 "grammar.y" /* yacc.c:1646  */
+#line 409 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = (yyvsp[-2].num) * (yyvsp[0].num); 		}
-#line 1981 "grammar.tab.c" /* yacc.c:1646  */
+#line 1976 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 415 "grammar.y" /* yacc.c:1646  */
-    { if((yyvsp[0].num)!=0) (yyval.num) = (yyvsp[-2].num)/(yyvsp[0].num); else {(yyval.num) = (yyvsp[-2].num); 	yyerror("Cannot Divide by zero, Result skips calculation");}		}
-#line 1987 "grammar.tab.c" /* yacc.c:1646  */
+#line 410 "grammar.y" /* yacc.c:1646  */
+    { if((yyvsp[0].num)!=0) (yyval.num) = (yyvsp[-2].num)/(yyvsp[0].num); else {(yyval.num) = (yyvsp[-2].num); 	fprintf(stderr,"Cannot Divide by zero, Result skips calculation");}		}
+#line 1982 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 416 "grammar.y" /* yacc.c:1646  */
-    { if((yyvsp[0].num)!=0) (yyval.num) = (yyvsp[-2].num)%(yyvsp[0].num); else {(yyval.num) = (yyvsp[-2].num);	yyerror("Cannot Divide by zero, Result skips calculation");}	}
-#line 1993 "grammar.tab.c" /* yacc.c:1646  */
+#line 411 "grammar.y" /* yacc.c:1646  */
+    { if((yyvsp[0].num)!=0) (yyval.num) = (yyvsp[-2].num)%(yyvsp[0].num); else {(yyval.num) = (yyvsp[-2].num);	fprintf(stderr,"Cannot Divide by zero, Result skips calculation");}	}
+#line 1988 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 417 "grammar.y" /* yacc.c:1646  */
+#line 412 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) =(int)pow((yyvsp[-2].num), (yyvsp[0].num));	}
-#line 1999 "grammar.tab.c" /* yacc.c:1646  */
+#line 1994 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 418 "grammar.y" /* yacc.c:1646  */
+#line 413 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = ~(yyvsp[0].num); 			}
-#line 2005 "grammar.tab.c" /* yacc.c:1646  */
+#line 2000 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 419 "grammar.y" /* yacc.c:1646  */
+#line 414 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = (yyvsp[-1].num); 				}
-#line 2011 "grammar.tab.c" /* yacc.c:1646  */
+#line 2006 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 420 "grammar.y" /* yacc.c:1646  */
+#line 415 "grammar.y" /* yacc.c:1646  */
     { (yyval.num) = -(yyvsp[0].num); 			}
-#line 2017 "grammar.tab.c" /* yacc.c:1646  */
+#line 2012 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2021 "grammar.tab.c" /* yacc.c:1646  */
+#line 2016 "grammar.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2245,7 +2240,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 424 "grammar.y" /* yacc.c:1906  */
+#line 419 "grammar.y" /* yacc.c:1906  */
 
 
 int reg[29] = {0};
@@ -2288,6 +2283,7 @@ void yyerror(const char* s,...) {
 	fprintf(stderr, s, ap);
 	fprintf(stderr, "\n");
 }
+
 
 void showToken () {
 	int tok;
@@ -2352,7 +2348,6 @@ struct OP* printMaker(struct DATA* toPrint) {
     // call		printf
 	
 	if(toPrint==NULL) {
-		yyerror("Can't print, Variable \"%s\" has not been declared yet.",varName);
 		return NULL;
 	}
 
@@ -2420,7 +2415,7 @@ struct DATA *addVar(char *name, char *value)
 		strcpy(varName[varCount++],name);
 		
     } else { // already exists
-		yyerror("This variable is previously declared..");
+		fprintf(stderr,"Variable %s is previously declared..\n",name);
 		return NULL;
 	} 
 	//printf("Added '%s'\n",newData->name);
@@ -2471,25 +2466,22 @@ unsigned hashfn(char *s)
 }
 
 struct DATA *lookup(char *s)
-{
+{   
     struct DATA *newData;
     for (newData = dataTable[hashfn(s)]; newData != NULL; newData = newData->next)
         if (strcmp(s, newData->name) == 0)
           return newData; // found
-    return NULL; // not forund
+    return NULL; // not found
 }
 
-void checkVar(char *name,int mode)
+struct DATA *checkVar(char *s)
 {   
-    if (lookup(name) == NULL) {
-		if(mode != 0) // Check if available
-			printf("Variable \"%s\" has not been declared yet.\n",name);
-	} else {
-		if(mode != 1) 
-			printf("Variable \"%s\" is previously declared. It will be replaced by the later one.\n",name);
-	}
+    struct DATA *newData = lookup(s);
+    if(newData!=NULL)
+        return newData;
+    fprintf(stderr,"Variable \"%s\" has not been declared yet.\n",s);
+    return NULL; // not found
 }
-
 
 
 

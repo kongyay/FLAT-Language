@@ -6,7 +6,6 @@
 #define YY_DECL int yylex()
 
 #include "grammar.tab.h"
-extern void yyerror(const char* s,...);
 int convHex(char* input);
 void singleComment();
 void multComment();
@@ -18,8 +17,8 @@ void multComment();
 
 "0"[Xx][0-9]+ 	    { yylval.num = (int)strtol(yytext+2, NULL, 16); return NUM; }
 [0-9]+ 	            { yylval.num = atoi(yytext); return NUM; }
-[0-9]+"."[0-9]* 	{ yylval.num = (int)atof(yytext); yyerror("Float/Double are not supported. (Floored to int)"); return NUM;}
-[0-9]*"."[0-9]+ 	{ yylval.num = (int)atof(yytext); yyerror("Float/Double are not supported. (Floored to int)"); return NUM;}
+[0-9]+"."[0-9]* 	{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
+[0-9]*"."[0-9]+ 	{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
 
 
 "++"                {return T_INC;}
@@ -66,7 +65,7 @@ newline       		{return T_PRINTLN;}
 \n+		            {}
 [\t\b\r\0 ]+              {}
 [A-Za-z]+[A-Za-z0-9]*              	{ yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
-.                   				{ yyerror("Invalid character \'%s\' ",yytext); }
+.                   				{ fprintf(stderr,"Invalid character \'%s\' ",yytext); }
 %%
 int convHex(char* input) {
     char* p = input;

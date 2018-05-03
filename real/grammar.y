@@ -40,11 +40,6 @@ struct OP* printHexMaker(struct DATA* toPrint);
 struct OP* printIntHexMaker(int value);
 struct OP* printVarExpMaker(struct OP* varExp);
 
-
-
-struct DATA *lookup(char *s);
-
-void checkVar(char *name,int mode);
 struct DATA* addVar(char *name, char *value);
 struct DATA* addString(char* value);
 struct DATA* addInt(char* varName);
@@ -53,6 +48,7 @@ void printProgram();
 void printCode(struct OP* printCode,int indent);
 unsigned hashfn(char *s);
 struct DATA *lookup(char *s);
+struct DATA *checkVar(char *s);
 char* imm(int d);
 void showToken();
 
@@ -105,7 +101,7 @@ void showToken();
 
 %%
 
-program: statements { printf("REACHED\n\n\n"); printProgram($1); };
+program: statements { printf("Compiled... :)\n\n\n"); printProgram($1); };
 
 statements: { }
 	| statement { $$ = (struct OP*)malloc(sizeof(struct OP)); addChild($$,$1); }
@@ -123,18 +119,18 @@ statement:
 ;
 
 print_stm: 	  T_PRINT exp 			    { $$ = printIntMaker($2); }
-			| T_PRINT T_NAME			{ $$ = printMaker(lookup($2)); }
+			| T_PRINT T_NAME			{ $$ = printMaker(checkVar($2)); }
             | T_PRINT var_exp			{ $$ = printVarExpMaker($2); }
 			| T_PRINT string			{ $$ = printMaker($2); }
 			| T_PRINTH exp				{ $$ = printIntHexMaker($2); }
-			| T_PRINTH T_NAME			{ $$ = printHexMaker(lookup($2)); }
-			| T_PRINTH string			{ $$ = NULL; yyerror("Can't print string as hex"); }
-			| T_PRINTLN					{ $$ = printMaker(lookup(".NewLine")); }
+			| T_PRINTH T_NAME			{ $$ = printHexMaker(checkVar($2)); }
+			| T_PRINTH string			{ $$ = NULL; fprintf(stderr,"Can't print string as hex"); }
+			| T_PRINTLN					{ $$ = printMaker(checkVar(".NewLine")); }
 ;
 
 assign_stm: T_INT T_NAME assign_part 
                     { 
-                        printf("declare+assign\n"); 
+                        //printf("declare+assign\n"); 
                         if(strcmp($3->b,$2)==0) {
                             $$ = NULL;
                         } else {
@@ -145,12 +141,12 @@ assign_stm: T_INT T_NAME assign_part
                     }
 			| T_INT T_NAME 
                     { 
-                        printf("declare\n"); 
+                        //printf("declare\n"); 
                         $$ = opMaker("MOVQ","$0",addInt($2)->reg); 
                     }
             | T_NAME assign_part 
                     { 
-                        printf("assign\n"); 
+                        //printf("assign\n"); 
                         sprintf($2->b,"%s",lookup($1)->reg); 
                         $$ = $2; 
                     }
@@ -161,8 +157,7 @@ assign_part: T_ASSIGN exp
                     $$ = opMaker("MOVQ",imm($2),""); 
                 }
 			| T_ASSIGN T_NAME 
-                {   
-                    checkVar($2,1); 
+                {    
                     $$ = opMaker("MOVQ","%rax",""); 
                     addChild($$,opMaker("MOVQ",lookup($2)->reg,"%rax"));
                 }
@@ -176,19 +171,19 @@ assign_part: T_ASSIGN exp
 
 if_stm:     T_IF compare T_COLON statement T_END								
                 { 
-                    printf("if\n"); 
+                    //printf("if\n"); 
                     $$ = ifMaker($2,$4);
                 }  
 			| T_IF compare T_COLON statement T_ELSE T_COLON statement T_END	
                 { 
-                    printf("ifElse\n"); 
+                    //printf("ifElse\n"); 
                     $$ = ifElseMaker($2,$4,$7); 
                 }  
 ;
 
 for_stm:     T_FOR assign_stm T_COMMA assign_stm T_COMMA if_stm	
                 { 
-                    printf("for\n"); 
+                    //printf("for\n"); 
                     $$ = forMaker($2,$4,$6);  
                 }  
 		
@@ -222,7 +217,7 @@ string:		T_STRING
 
 compare:	exp cmp_tks exp					
                 { 
-                    printf("cmp %d %d\n",$1,$3);
+                    //printf("cmp %d %d\n",$1,$3);
                     $$ = opMaker("CMPQ",imm($3),imm($1));   
                     sprintf($$->extra1,"J%c%c",$2[0],$2[1]); 
                     sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  
@@ -230,7 +225,7 @@ compare:	exp cmp_tks exp
             
             | var_exp cmp_tks exp					
                 { 
-                    printf("cmp %d\n",$3);
+                    //printf("cmp %d\n",$3);
                     $$ = opMaker("CMPQ",imm($3),"%rax"); 	 	
                     addChild($$,$1);
                     sprintf($$->extra1,"J%c%c",$2[0],$2[1]); 
@@ -238,7 +233,7 @@ compare:	exp cmp_tks exp
                 }
 			| exp cmp_tks var_exp				
                 { 
-                    printf("cmp %d\n",$1);
+                    //printf("cmp %d\n",$1);
                     $$ = opMaker("CMPQ","%rax",imm($1)); 
                     addChild($$,$3);	
                     sprintf($$->extra1,"J%c%c",$2[0],$2[1]); 
@@ -246,7 +241,7 @@ compare:	exp cmp_tks exp
                 }
             | var_exp cmp_tks var_exp					
                 { 
-                    printf("cmp\n");
+                    //printf("cmp\n");
                     $$ = opMaker("CMPQ","%rbx","%rax");   
                     addChild($$,$3);
                     addChild($$,opMaker("MOVQ","%rax","%rbx"));
@@ -412,8 +407,8 @@ exp: 		NUM						{ $$ = $1; 				}
 	 		| exp T_PLUS exp		{ $$ = $1 + $3; 		}
 			| exp T_MINUS exp		{ $$ = $1 - $3; 		}
 			| exp T_MULTIPLY exp	{ $$ = $1 * $3; 		}
-			| exp T_DIVIDE exp	 	{ if($3!=0) $$ = $1/$3; else {$$ = $1; 	yyerror("Cannot Divide by zero, Result skips calculation");}		}
-			| exp T_MOD exp	 		{ if($3!=0) $$ = $1%$3; else {$$ = $1;	yyerror("Cannot Divide by zero, Result skips calculation");}	}
+			| exp T_DIVIDE exp	 	{ if($3!=0) $$ = $1/$3; else {$$ = $1; 	fprintf(stderr,"Cannot Divide by zero, Result skips calculation");}		}
+			| exp T_MOD exp	 		{ if($3!=0) $$ = $1%$3; else {$$ = $1;	fprintf(stderr,"Cannot Divide by zero, Result skips calculation");}	}
 			| exp T_POW exp	 		{ $$ =(int)pow($1, $3);	}
 			| T_NOT exp	 			{ $$ = ~$2; 			}
 			| T_LEFT exp T_RIGHT	{ $$ = $2; 				}
@@ -463,6 +458,7 @@ void yyerror(const char* s,...) {
 	fprintf(stderr, s, ap);
 	fprintf(stderr, "\n");
 }
+
 
 void showToken () {
 	int tok;
@@ -527,7 +523,6 @@ struct OP* printMaker(struct DATA* toPrint) {
     // call		printf
 	
 	if(toPrint==NULL) {
-		yyerror("Can't print, Variable \"%s\" has not been declared yet.",varName);
 		return NULL;
 	}
 
@@ -595,7 +590,7 @@ struct DATA *addVar(char *name, char *value)
 		strcpy(varName[varCount++],name);
 		
     } else { // already exists
-		yyerror("This variable is previously declared..");
+		fprintf(stderr,"Variable %s is previously declared..\n",name);
 		return NULL;
 	} 
 	//printf("Added '%s'\n",newData->name);
@@ -646,25 +641,22 @@ unsigned hashfn(char *s)
 }
 
 struct DATA *lookup(char *s)
-{
+{   
     struct DATA *newData;
     for (newData = dataTable[hashfn(s)]; newData != NULL; newData = newData->next)
         if (strcmp(s, newData->name) == 0)
           return newData; // found
-    return NULL; // not forund
+    return NULL; // not found
 }
 
-void checkVar(char *name,int mode)
+struct DATA *checkVar(char *s)
 {   
-    if (lookup(name) == NULL) {
-		if(mode != 0) // Check if available
-			printf("Variable \"%s\" has not been declared yet.\n",name);
-	} else {
-		if(mode != 1) 
-			printf("Variable \"%s\" is previously declared. It will be replaced by the later one.\n",name);
-	}
+    struct DATA *newData = lookup(s);
+    if(newData!=NULL)
+        return newData;
+    fprintf(stderr,"Variable \"%s\" has not been declared yet.\n",s);
+    return NULL; // not found
 }
-
 
 
 
