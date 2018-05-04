@@ -65,7 +65,7 @@ newline       		{return T_PRINTLN;}
 \n+		            {}
 [\t\b\r\0 ]+              {}
 [A-Za-z]+[A-Za-z0-9]*              	{ yylval.str=malloc(yyleng); sprintf(yylval.str,"%s",yytext); return T_NAME; }
-.                   				{ fprintf(stderr,"Invalid character \'%s\' ",yytext); }
+.                   				{ fprintf(stderr,"Invalid character \'%s\' \n",yytext); }
 %%
 int convHex(char* input) {
     char* p = input;

@@ -1081,7 +1081,7 @@ YY_RULE_SETUP
 case 45:
 YY_RULE_SETUP
 #line 68 "grammar.l"
-{ fprintf(stderr,"Invalid character \'%s\' ",yytext); }
+{ fprintf(stderr,"Invalid character \'%s\' \n",yytext); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP

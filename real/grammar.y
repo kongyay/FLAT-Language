@@ -76,8 +76,9 @@ void showToken();
 %type <data> string
 // เรียงลำดับความสำคัญของ token ต่างๆ
 
-%nonassoc T_END;
-%nonassoc T_ELSE;
+%precedence LOW
+%nonassoc T_END
+%nonassoc T_ELSE
 %right T_PRINT T_PRINTH
 %right T_INC T_GE T_LE T_EQ T_G T_L T_NE T_ASSIGN 
 %left T_AND 
@@ -103,8 +104,9 @@ void showToken();
 program: statements { printf("Compiled... :)\n\n\n"); printProgram($1); };
 
 statements: { }
-	| statement { $$ = (struct OP*)malloc(sizeof(struct OP)); addChild($$,$1); }
-    | statements statement {  $$ = $1; addChild($$,$2); }
+	| statement                     { $$ = (struct OP*)malloc(sizeof(struct OP)); addChild($$,$1); }
+    | statements statement          { $$ = $1; addChild($$,$2); }
+    | statements error statement    { $$ = $1; addChild($$,$3); yyerrok; fprintf(stderr,"Error: Bad Statement\n"); } 
 ;
 
 statement: 
@@ -113,8 +115,10 @@ statement:
     | if_stm 			{ printf("Stm - if\n"); 		$$ = $1;}
 	| for_stm 		    { printf("Stm - for\n"); 		$$ = $1;}
 	| block				{ printf("Stm - Block\n");		$$ = $1;}
-    
-	
+
+;
+
+
 ;
 
 print_stm: 	  T_PRINT exp 			    { $$ = printIntMaker($2); }
@@ -123,9 +127,10 @@ print_stm: 	  T_PRINT exp 			    { $$ = printIntMaker($2); }
 			| T_PRINT string			{ $$ = printMaker($2); }
 			| T_PRINTH exp				{ $$ = printIntHexMaker($2); }
 			| T_PRINTH T_NAME			{ $$ = printHexMaker(checkVar($2)); }
-			| T_PRINTH string			{ $$ = NULL; fprintf(stderr,"Can't print string as hex"); }
+			| T_PRINTH string			{ $$ = NULL; fprintf(stderr,"Error: Can't print string as hex"); }
 			| T_PRINTLN					{ $$ = printMaker(checkVar(".NewLine")); }
 ;
+
 
 assign_stm: T_INT T_NAME assign_part 
                     { 
@@ -250,9 +255,9 @@ compare:	exp cmp_tks exp
                     sprintf($$->extra2,"J%c%c",$2[2],$2[3]);  
                 }
             | T_STRING cmp_tks var_exp					
-                { fprintf(stderr,"Can't compare string\n"); } 
+                { fprintf(stderr,"Error: Can't compare string\n"); } 
             | var_exp cmp_tks T_STRING					
-                { fprintf(stderr,"Can't compare string\n"); } 
+                { fprintf(stderr,"Error: Can't compare string\n"); } 
 
             
 ;
@@ -401,26 +406,27 @@ var_exp: 	T_NAME
                     addChild($$,opMaker("MOVQ",checkVar($2)->reg,"%rax"));	
                 }	
             | T_STRING T_PLUS var_exp					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $3; } 
             | var_exp T_PLUS T_STRING					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
             | T_STRING T_MINUS var_exp					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $3; } 
             | var_exp T_MINUS T_STRING					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
             | T_STRING T_MULTIPLY var_exp					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $3; } 
             | var_exp T_MULTIPLY T_STRING					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
             | T_STRING T_DIVIDE var_exp					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $3; } 
             | var_exp T_DIVIDE T_STRING					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
             | T_STRING T_MOD var_exp					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $3; } 
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $3; } 
             | var_exp T_MOD T_STRING					
-                { fprintf(stderr,"Can't do math operation with string\n"); $$ = $1; } 
-            | T_LEFT var_exp T_RIGHT	{ $$ = $2; 	}
+                { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
+            | T_LEFT var_exp T_RIGHT	{ $$ = $2; 	   }
+            | var_exp var_exp           { $$ = $1;   fprintf(stderr,"Error: Missing an operator, Taking left operand...\n");  }
             
 ;	
 
@@ -431,12 +437,13 @@ exp: 		NUM						{ $$ = $1; 				}
 	 		| exp T_PLUS exp		{ $$ = $1 + $3; 		}
 			| exp T_MINUS exp		{ $$ = $1 - $3; 		}
 			| exp T_MULTIPLY exp	{ $$ = $1 * $3; 		}
-			| exp T_DIVIDE exp	 	{ if($3!=0) $$ = $1/$3; else {$$ = $1; 	fprintf(stderr,"Cannot Divide by zero, Result skips calculation");}		}
-			| exp T_MOD exp	 		{ if($3!=0) $$ = $1%$3; else {$$ = $1;	fprintf(stderr,"Cannot Divide by zero, Result skips calculation");}	}
+			| exp T_DIVIDE exp	 	{ if($3!=0) $$ = $1/$3; else {$$ = $1; 	fprintf(stderr,"Error: Cannot Divide by zero, Result skips calculation");}		}
+			| exp T_MOD exp	 		{ if($3!=0) $$ = $1%$3; else {$$ = $1;	fprintf(stderr,"Error: Cannot Divide by zero, Result skips calculation");}	}
 			| exp T_POW exp	 		{ $$ =(int)pow($1, $3);	}
 			| T_NOT exp	 			{ $$ = ~$2; 			}
 			| T_LEFT exp T_RIGHT	{ $$ = $2; 				}
-			| T_MINUS exp  %prec NEG{ $$ = -$2; 			}	
+			| T_MINUS exp  %prec NEG{ $$ = -$2; 			}	 
+            | exp exp               { $$ = $1;   fprintf(stderr,"Error: Missing an operator, Taking left operand...\n");  }
 ;			
 
 

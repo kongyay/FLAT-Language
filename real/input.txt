@@ -1,4 +1,4 @@
-int max = 10
+int max = 10+2
 int i
 int j
 print "Diamond !!" newline
