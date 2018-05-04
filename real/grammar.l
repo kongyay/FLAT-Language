@@ -41,6 +41,8 @@ void multComment();
 "||"	        {return T_OR;}
 "!"		        {return T_NOT;}
 
+":)"			{return T_SMILE;}	
+":("			{return T_SAD;}
 "|"		            {return T_VERT;}
 "["[\t\r\n ]+         {return T_Bracket_L;}
 "]"[\t\r\n ]+		    {return T_Bracket_R;}

@@ -69,7 +69,7 @@ void showToken();
 %token T_INC T_GE T_LE T_EQ T_G T_L T_NE T_ASSIGN 
 %token T_VERT T_Bracket_L T_Bracket_R T_COLON T_COMMA T_STRING
 %token T_INT T_IF T_ELSE T_FOR T_PRINT T_PRINTH T_PRINTLN T_END
-%token T_SPACE T_NEWLINE T_NAME
+%token T_SPACE T_NEWLINE T_NAME T_SAD T_SMILE
 %type <str>  T_NAME cmp_tks T_STRING
 %type <num> NUM NUM_H exp 
 %type <op>  statement statements if_stm assign_part assign_stm print_stm block for_stm compare var_exp T_PRINTLN
@@ -129,6 +129,8 @@ print_stm: 	  T_PRINT exp 			    { $$ = printIntMaker($2); }
 			| T_PRINTH T_NAME			{ $$ = printHexMaker(checkVar($2)); }
 			| T_PRINTH string			{ $$ = NULL; fprintf(stderr,"Error: Can't print string as hex"); }
 			| T_PRINTLN					{ $$ = printMaker(checkVar(".NewLine")); }
+            | T_SMILE					{ $$ = printMaker(checkVar(".Smile")); }
+            | T_SAD					    { $$ = printMaker(checkVar(".Sad")); }
 ;
 
 
@@ -471,6 +473,8 @@ int main( int argc, char **argv) {
 	addVar(".FormatInt","%ld\\0");
 	addVar(".FormatHex","%x\\0");
 	addVar(".NewLine","\\12\\0");
+    addVar(".Smile","Have a good day :)\\12\\0");
+    addVar(".Sad","Don't cry :(\\12\\0");
 	strcpy(filename,argv[1]);
 	yyin = f;
     //showToken();

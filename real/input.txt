@@ -1,7 +1,7 @@
 int max = 10+2
 int i
 int j
-print "Diamond !!" newline
+print "Diamond !!" newline 
 int space = max - 1
 
 for i = 1, i = i+1, if i <= max : [
@@ -35,4 +35,5 @@ for i = 1, i = i+1, if i <= max - 1: [
 
     newline
 
-] end
+] end 
+:) :) :)
