@@ -54,10 +54,10 @@ void multComment();
 int[\t ]+		        {return T_INT;}
 if[\t\r\n ]+            {return T_IF;}
 end           		{return T_END;}
-"else"[\t\r\n ]*          {return T_ELSE;}
+else[\t\r\n ]*          {return T_ELSE;}
 for[\t ]+             {return T_FOR;}
-print[\t ]*           {return T_PRINT;}
-printh[\t ]*          {return T_PRINTH;}
+print[\t ]+           {return T_PRINT;}
+printh[\t ]+          {return T_PRINTH;}
 newline       		{return T_PRINTLN;}
 
 
