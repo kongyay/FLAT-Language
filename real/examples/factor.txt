@@ -1,0 +1,14 @@
+int number = 20
+int i
+
+print "Factors are: "
+  
+for i=1, i = i + 1, if i <= number: [
+    
+        if number%i == 0 : [
+            print i
+            print " "
+        ] end
+] end
+
+newline

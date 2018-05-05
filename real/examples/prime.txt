@@ -1,23 +1,30 @@
-int n = 11
 int i
-int flag = 0
+int j
+int isPrime
 
-print "Is " 
-print  n 
-print " a prime number?" newline
+print "All prime numbers between 1 to 100 are: "
+   
+for i = 2 , i = i + 1 , if i <= 100 : 
+[
+        
+	isPrime = 1
 
-for i = 2, i = i+1, if i<=n/2: [
-	if n%i == 0: [
-		flag = 1
-		i = n
-    ] end
+	for j=2 , j = j + 1 , if j <= i/2 :
+	[
+          
+		if i%j == 0 :
+		[
+			isPrime = 0
+			j = 100)
+		] end
+ 	] end
+
+	if isPrime == 1 : 
+ 	[
+		print i
+		print " "
+	] end
+
 ] end
 
-if flag == 0 : [
-	print "This is prime number"
-    newline
-]
-else : [
-	print "This is not a prime number"
-    newline
-] end
+newline :)

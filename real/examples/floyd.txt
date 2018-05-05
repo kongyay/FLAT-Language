@@ -1,0 +1,15 @@
+int rows = 10
+int i
+int j
+int number= 1
+
+    for i=1 , i = i + 1 , if i <= rows : [
+        for j=1 , j = j + 1 , if j <= i :
+        [
+            print number
+            number = number + 1
+        ] end
+
+        newline
+    ] end
+

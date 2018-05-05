@@ -1,0 +1,19 @@
+int dividend = 10
+int divisor = 5
+int quotient
+int remainder
+
+print dividend 
+print " / "
+print divisor 
+newline
+
+quotient = dividend / divisor
+remainder = dividend % divisor
+
+    print "Quotient = " 
+    print quotient
+    newline
+    print "remainder = "
+    print remainder
+    newline

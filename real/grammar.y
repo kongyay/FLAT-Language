@@ -428,9 +428,7 @@ var_exp: 	T_NAME
             | var_exp T_MOD T_STRING					
                 { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
             | T_LEFT var_exp T_RIGHT	{ $$ = $2; 	   }
-            | var_exp exp          { $$ = $1;   fprintf(stderr,"Error: Missing an operator, Taking only variable operand...\n");  }
-            | exp var_exp          { $$ = $2;  fprintf(stderr,"Error: Missing an operator, Taking only variable operand...\n");  }
-            
+          
 ;	
 
 ;
@@ -446,7 +444,7 @@ exp: 		NUM						{ $$ = $1; 				}
 			| T_NOT exp	 			{ $$ = ~$2; 			}
 			| T_LEFT exp T_RIGHT	{ $$ = $2; 				}
 			| T_MINUS exp  %prec NEG{ $$ = -$2; 			}	 
-            | exp exp               { $$ = $1;   fprintf(stderr,"Error: Missing an operator, Taking left operand...\n");  }
+            | exp exp               { $$ = $1;   fprintf(stderr,"Error: Missing an operator for %d and %d, Taking left operand...\n",$1,$2);  }
 ;			
 
 

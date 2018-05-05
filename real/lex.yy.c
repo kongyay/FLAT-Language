@@ -874,12 +874,12 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 20 "grammar.l"
-{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
+{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)\n"); return NUM;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 21 "grammar.l"
-{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
+{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)\n"); return NUM;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP

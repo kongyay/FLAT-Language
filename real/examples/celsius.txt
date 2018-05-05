@@ -1,0 +1,6 @@
+int celsius = 25
+int fahrenheit
+ 
+ fahrenheit = (1.8 * celsius) + 32
+ print "nTemperature in Fahrenheit : "
+ print fahrenheit

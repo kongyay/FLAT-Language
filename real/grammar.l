@@ -17,8 +17,8 @@ void multComment();
 
 "0"[Xx][0-9A-Fa-f]+ 	    { yylval.num = (int)strtol(yytext+2, NULL, 16); return NUM; }
 [0-9]+ 	            { yylval.num = atoi(yytext); return NUM; }
-[0-9]+"."[0-9]* 	{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
-[0-9]*"."[0-9]+ 	{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)"); return NUM;}
+[0-9]+"."[0-9]* 	{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)\n"); return NUM;}
+[0-9]*"."[0-9]+ 	{ yylval.num = (int)atof(yytext); fprintf(stderr,"Float/Double are not supported. (Floored to int)\n"); return NUM;}
 
 
 "++"                {return T_INC;}
