@@ -110,11 +110,11 @@ statements: { }
 ;
 
 statement: 
-      print_stm 		{ printf("Stm - print\n"); 		$$ = $1; }
-	| assign_stm 		{ printf("Stm - declare/assign\n"); 	$$ = $1;}
-    | if_stm 			{ printf("Stm - if\n"); 		$$ = $1;}
-	| for_stm 		    { printf("Stm - for\n"); 		$$ = $1;}
-	| block				{ printf("Stm - Block\n");		$$ = $1;}
+      print_stm 		{ /*printf("Stm - print\n");*/ 		        $$ = $1; }
+	| assign_stm 		{ /*printf("Stm - declare/assign\n");*/ 	$$ = $1;}
+    | if_stm 			{ /*printf("Stm - if\n");*/ 		        $$ = $1;}
+	| for_stm 		    { /*printf("Stm - for\n");*/ 		        $$ = $1;}
+	| block				{ /*printf("Stm - Block\n");*/		        $$ = $1;}
 
 ;
 
@@ -428,7 +428,8 @@ var_exp: 	T_NAME
             | var_exp T_MOD T_STRING					
                 { fprintf(stderr,"Error: Can't do math operation with string\n"); $$ = $1; } 
             | T_LEFT var_exp T_RIGHT	{ $$ = $2; 	   }
-            | var_exp var_exp           { $$ = $1;   fprintf(stderr,"Error: Missing an operator, Taking left operand...\n");  }
+            | var_exp exp          { $$ = $1;   fprintf(stderr,"Error: Missing an operator, Taking only variable operand...\n");  }
+            | exp var_exp          { $$ = $2;  fprintf(stderr,"Error: Missing an operator, Taking only variable operand...\n");  }
             
 ;	
 
@@ -732,6 +733,11 @@ void printProgram(struct OP* parent)  {
 
 	dup2(saved_stdout, 1);
 	close(saved_stdout);
+
+    char cmd1[50],cmd2[50];
+    sprintf(cmd1,"gcc %s.s -o %s.o",filename,filename);
+    sprintf(cmd2,"./%s.o",filename);
+    system(cmd1); system(cmd2);
 }
 
 void printCode(struct OP* parent,int indent) {

@@ -1,0 +1,13 @@
+int n = 0x10 
+int i
+int sum = 0
+	print "Sum From 0 to " 
+	print  n newline
+    for i=1,  i = i+1 , if i <= n :
+    [
+        sum  = sum + i
+    ] end
+
+    print "Sum = "
+    print sum
+	newline

@@ -162,12 +162,6 @@ main:
 		MOVL	$.Smile, %edi
 		MOVL	$0, %eax
 	CALL	printf
-		MOVL	$.Smile, %edi
-		MOVL	$0, %eax
-	CALL	printf
-		MOVL	$.Smile, %edi
-		MOVL	$0, %eax
-	CALL	printf
 
 MOVL	$0, %eax
 leave
